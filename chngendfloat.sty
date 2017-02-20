@@ -1,0 +1,47 @@
+%%%%%%%%%%%%%%%%%%%%SPI Modifications to Endfloat Macro*******************
+\renewcommand{\figureplace}{%
+   \begin{center}
+     [\figurename~\ifAppsect\relax A.\fi\thepostfig\ about here.]
+   \end{center}}
+\renewcommand{\tableplace}{%
+   \begin{center}
+      [\tablename~\ifAppsect\relax A.\fi\theposttbl\ about here.]
+   \end{center}}
+
+\def\figure{%
+     \efloat@condopen{fff}
+\ifAppsect
+     \addtocounter{appfigcnt}{1}
+\ifnum\theappfigcnt=1\relax
+     \efloat@iwrite{fff}{\string\appfigtrue}%
+     \efloat@iwrite{fff}{\string\setcounter{figure}{0}}%
+\fi\fi
+     \efloat@iwrite{fff}{\string\begin{figure*}}%
+    \if@domarkers%
+       \addtocounter{postfig}{1}% % bj
+       \figureplace%              % bj
+    \fi%
+    \def\@currenvir{efloat@float}%
+    \begingroup%
+    \let\do\ef@makeinnocent \dospecials%
+    \ef@makeinnocent\^^L% and whatever other special cases
+    \endlinechar`\^^M \catcode`\^^M=12 \ef@xfigure}
+
+\def\table{\efloat@condopen{ttt}
+\ifAppsect
+     \addtocounter{apptabcnt}{1}
+\ifnum\theapptabcnt=1\relax
+     \efloat@iwrite{ttt}{\string\apptabtrue}%
+     \efloat@iwrite{ttt}{\string\setcounter{table}{0}}%
+\fi\fi
+    \efloat@iwrite{ttt}{\string\begin{table*}}%
+    \if@domarkers
+       \addtocounter{posttbl}{1} % bj
+       \tableplace               % bj
+    \fi
+    \def\@currenvir{efloat@float}%
+    \begingroup
+    \let\do\ef@makeinnocent \dospecials
+    \ef@makeinnocent\^^L% and whatever other special cases
+    \endlinechar`\^^M \catcode`\^^M=12 \ef@xtable}
+%%%%%%%%%%%%%%%%%%%%%%%%%%END Macro%%%%%%%%%%%%%%%%%%%%
