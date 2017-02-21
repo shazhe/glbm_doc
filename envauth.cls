@@ -64,7 +64,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{pifont,latexsym,ifthen,theorem,rotating,calc,textcase,booktabs,color}
 \RequirePackage{amsfonts,amssymb,amsbsy,amsmath}
-%\RequirePackage{bm}
+\RequirePackage{bm}
 \RequirePackage[errorshow]{tracefnt}
 \usepackage{helvet}
 
