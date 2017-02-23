@@ -53,14 +53,14 @@ Correctly separating the sources of sea level rise (SLR) is crucial for improvin
 
 \section{Bayesian Hierarchical Modelling}
 \label{s:model}
-We follow the framework in \citet{b1} and define the Bayesian hierarchical model with (i) an observation layer describing the interaction between the process and instruments, (ii) a process layer containing information on the geophysical and spatial-temporal nature of the processes and (iii) a parameter layer specifying prior beliefs on unknowns. 
+We follow the framework in \citet{b1} and define the Bayesian hierarchical model with (i) an observation layer describing the interaction between the processes and instruments, (ii) a process layer containing information on the geophysical and spatial-temporal nature of the processes and (iii) a parameter layer specifying prior beliefs on unknowns. 
 
 \subsection{The process layer}
 \label{ss:process}
 All the processes are measured as yearly hight change in water equivalent (mm/yr) and denoted by $\bX(\bs)$. The global sea level change depends on the volume change of water in the world's oceans and the shape of the ocean basins. The glacio-isostatic adjustment (GIA), denoted by $\bX_{GIA}$, can be used to account for the change of ocean basins ({\color{red} cite Wu et al 2010}). The volume change of ocean is mainly due to the mass change (barystatic) and the density change (steric) of water. Denote the barystatic process by $\bX_{B}$ and the steric process by $\bX_{S}$. The steric process consists of two parts: the thermosteric process $\bX_{ST}$ induced by temperature and the halosteric process $\bX_{SH}$ due to the salinity change.
 
 
-When investigating locally, the sea level change can be also strongly affected by ocean circulation $\bX_{C}$ and gravity's fingerprint $\bX_{F}$ on a fine scale ({\color{red} cf Bamber and Riva 2010}). Hence, the total sea-level change $\bX_{tot} (\bs)$ at a given location $\bs$ can be decomposed as
+When investigating locally, the sea level change can be also strongly affected by ocean circulation $\bX_{C}$ and gravity's finger print $\bX_{F}$ ({\color{red} cf Bamber and Riva 2010}). Hence, the total sea-level change $\bX_{tot} (\bs)$ at a given location $\bs$ can be decomposed as
 \begin{align}\label{x_tot}
 \bX_{tot} (\bs) = \bX_{SH}(\bs) + \bX_{ST}(\bs) + \bX_{B}(\bs) + \bX_{GIA}(\bs) + \bX_{C}(\bs) + \bX_F(\bs) 
 \end{align}
@@ -68,7 +68,7 @@ When investigating locally, the sea level change can be also strongly affected b
 In the following, we specify the spatial-temporal nature for each process.
 
 \subsubsection{The steric process}
-The steric process consists of halosteric process $\bX_{SH}(\bs)$ and the thermosteric process $\bX_{ST}$. How to model these two processes?
+The steric process consists of the halosteric process $\bX_{SH}(\bs)$ and the thermosteric process $\bX_{ST}$. How to model these two processes?
 \begin{enumerate}
 \item time invariant?
 \item independent?
@@ -88,15 +88,19 @@ The GIA process is modelled as spatial process that does not change over the tim
 \item Maike provide the fixed GIA value for the first study and prior information for later use?
 \end{enumerate}
 
-\subsubsection{The fine scale processes}
-For regional sea level change, the ocean circulation and gravity's finger print can both modelled as fine scale variations.
+\subsubsection{Regional processes}
+For regional sea level change, the ocean circulation can be modelled as a fine scale variation.
 \begin{align}
-&\bX_{C}(\bs) = \sum_{i=1}^{n_C} \phi_i(\bs)\eta_i + \delta_{C}(\bs) \\
-&\bX_{F}(\bs) = \sum_{i=1}^{n_F} \psi_i(\bs)\beta_i + \delta_{F}(\bs)
+\bX_{C}(\bs) = \sum_{i=1}^{n_C} \phi_i(\bs)\eta_i + \delta_{C}(\bs)
 \end{align}
-where $\{\phi_i\}$ and $\{\psi_i\}$ are some basis functions, $\eta_i$ and $\beta_i$ are the corresponding coefficients, and $delta_C$ and $\delta_F$ are Gaussian errors.
+where $\{\phi_i\}$ are some basis functions and $\eta_i$ are the corresponding coefficients, and $\delta_C$ and $\delta_F$ are Gaussian errors.
 
-In this first study, we will ignore $\bX_C(\bs)$ and $\bX_F(\bs)$ since we do not have a satisfactory model to relate them with data yet. Including these two latent process will make the model under-determined. One possible solution is to smooth these two processes out by using historic data. {\color{red} \emph{My memory of using a emulator for the finger print now faded away... What data can we use to estimate $\beta_i$ and what basis functions? Green's function??}}
+For the gravity's finger print (need to check out the paper) 
+\begin{align}
+\bX_{F}(\bs) = \sum_{i=1}^{n_F} \psi_i(\bs)\beta_i
+\end{align}
+
+In this first study, we will ignore $\bX_C(\bs)$ and $\bX_F(\bs)$ since we do not have a satisfactory model to relate them with data yet. Including these two latent process will make the model under-determined. One possible solution is to smooth these two processes out by using historic data. 
 
 \subsection{The data layer}
 We are going to use the following datasets:
@@ -113,9 +117,9 @@ The data layer is modelled by the following linear system
 \begin{align}
 &\bZ_{ALT}(\bs) = \bX_{tot}(\bs) + \bm{\varepsilon}_{ALT}(\bs) \\
 &\bZ_{ARGO}(\bs) = \bX_{SH}(\bs) + \bm{\varepsilon}_{ARGO}(\bs)\\
-&\bZ_{GRACE}(D_i) = \int_{D_i} \rho_0(\bs) \bX_{B} \ubd \bs + \int_{D_i} \rho_E(\bs) \bX_{GIA} \ubd \bs + \int_{D_i} \rho_0(\bs) \bX_{C} \ubd \bs + \bm{\varepsilon}_{GRACE}(D_i)
+&\bZ_{GRACE}(D_i) = \int_{D_i} \rho_0(\bs) \bX_{B}(\bs) +  \rho_E(\bs) \bX_{GIA}(\bs) + \rho_0(\bs) \bX_{C}(\bs) \, \ubd \bs + \bm{\varepsilon}_{GRACE}(D_i)
 \end{align}
-where $\bm{\varepsilon}$ are the measurement errors for each instrument (provided by the person who processed the data), $rho$ are fixed density (or density map).
+where $\bm{\varepsilon}$ are the measurement errors for each instrument (provided by the person who processed the data), $\rho$ are fixed density (or density map).
 \begin{enumerate}
 \item I'm not entirely sure about the last equation, especially the density notation.
 \end{enumerate}
