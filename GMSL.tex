@@ -89,18 +89,22 @@ The GIA process is modelled as spatial process that does not change over the tim
 \end{enumerate}
 
 \subsubsection{Regional processes}
-For regional sea level change, the ocean circulation can be modelled as a fine scale variation.
+The ice mass changes around the earth's pole also have an gravitational effect on the mass balance of the oceans and it i called the sea level `fingerprints'. We can emulate the effect as in Bamber et. al 2010 (this paper estimates ice loss of three largest glacier by using GRACE data, but how are we going to use it here (in the future?))
+\begin{align}
+\bX_{F}(\bs) = \sum_{i=1}^{n_F} \psi_i(\bs)\beta_i
+\end{align}
+
+
+\subsubsection{Fine scale variations}
+Finally, fine scale variations driven by the ocean circulation can be modelled as 
 \begin{align}
 \bX_{C}(\bs) = \sum_{i=1}^{n_C} \phi_i(\bs)\eta_i + \delta_{C}(\bs)
 \end{align}
 where $\{\phi_i\}$ are some basis functions and $\eta_i$ are the corresponding coefficients, and $\delta_C$ and $\delta_F$ are Gaussian errors.
 
-For the gravity's finger print (need to check out the paper) 
-\begin{align}
-\bX_{F}(\bs) = \sum_{i=1}^{n_F} \psi_i(\bs)\beta_i
-\end{align}
-
 In this first study, we will ignore $\bX_C(\bs)$ and $\bX_F(\bs)$ since we do not have a satisfactory model to relate them with data yet. Including these two latent process will make the model under-determined. One possible solution is to smooth these two processes out by using historic data. 
+
+
 
 \subsection{The data layer}
 We are going to use the following datasets:
