@@ -60,23 +60,23 @@
 %------------Y(^_^) I'm the toolbox for lazybones (^_^)Y-------------%
 \begin{document}
 
-\title{Test INLA with Experiment 1}
+\title{Test Experiment 1 with INLA}
 \author{Zhe Sha}
 \maketitle
 
 \onehalfspacing
 \numberwithin{equation}{section}
 %------------Y(^_^) I'm the happy separation line (^_^)Y-------------%
-In this report we test the INLA package by using the setting of \emph{Experiment 1a}.
 
 \section{Introduction}
-1. setting of Experiment 1a
+1.  Experiment 1a setting
 
 \section{Priors for the hyper parameters }
 2. Transformation of the hyper parameter and choosing the prior
 
+\newpage
 \section{Test error size}
-3. Test the "Principle of stable inference" theorem (cite result and paper)
+3. Test the "Principle of stable inference" theorem 
 \subsection{Change error size of a single point}
  Compare the effect of error size using a single isolated point.
  
@@ -84,7 +84,7 @@ In this report we test the INLA package by using the setting of \emph{Experiment
  \begin{center}
  \includegraphics[scale=0.8]{fig/PointErr_hyperpar.pdf}
  \end{center}
- \caption[Posteriors of hyper parameters]{Posteriors of the hyper parameters using different error size for a selected point.}
+ \caption[Posteriors of hyper parameters]{Posteriors of the hyper parameters using different error size for a selected point. Black: small error, Red: large error.}
  \label{fig:5}
  \end{figure}
  
@@ -96,11 +96,12 @@ In this report we test the INLA package by using the setting of \emph{Experiment
  \label{fig:6}
  \end{figure}
  
- \subsection{Change error size in general}
+ \newpage
+ \subsection{Change global error size}
 
  \begin{figure}[htbp]
  \begin{center}
- \includegraphics{fig/sMesh_sErr_hyperpar.pdf}
+ \includegraphics[scale = 0.8]{fig/sMesh_sErr_hyperpar.pdf}
  \end{center}
  \caption[Hyper parameter with small errors]{Posteriors of hyper parameters using GPS data with small measurement errors. Black: posterior, Red: prior.}
  \label{fig:1}
@@ -108,7 +109,7 @@ In this report we test the INLA package by using the setting of \emph{Experiment
 
 \begin{figure}[htbp]
  \begin{center}
- \includegraphics{fig/sMesh_LErr_hyperpar.pdf}
+ \includegraphics[scale = 0.8]{fig/sMesh_LErr_hyperpar.pdf}
  \end{center}
  \caption[Hyper parameter with large errors]{Posteriors of hyper parameters using GPS data with large measurement errors. Black: posterior, Red: prior.}
  \label{fig:2}
@@ -130,13 +131,13 @@ In this report we test the INLA package by using the setting of \emph{Experiment
  \label{fig:4}
  \end{figure}
  
- 
+ \newpage
  
 \section{Effect of Mesh size}
 
 \begin{figure}[htbp]
  \begin{center}
- \includegraphics{fig/MeshSize_1hyperpar.pdf}
+ \includegraphics[scale = 0.8]{fig/MeshSize_1hyperpar.pdf}
  \end{center}
  \caption[Hyper parameter for different mesh sizes]{Posteriors of hyper parameters estimated using different mesh sizes for the latnet process. Black: small, Red: medium, blue: large.}
  \label{fig:2}
