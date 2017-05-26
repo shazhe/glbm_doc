@@ -69,25 +69,88 @@
 %------------Y(^_^) I'm the happy separation line (^_^)Y-------------%
 In this report we test the INLA package by using the setting of \emph{Experiment 1a}.
 
-
+\section{Introduction}
 1. setting of Experiment 1a
 
-
+\section{Priors for the hyper parameters }
 2. Transformation of the hyper parameter and choosing the prior
 
-
+\section{Test error size}
 3. Test the "Principle of stable inference" theorem (cite result and paper)
+\subsection{Change error size of a single point}
+ Compare the effect of error size using a single isolated point.
+ 
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/PointErr_hyperpar.pdf}
+ \end{center}
+ \caption[Posteriors of hyper parameters]{Posteriors of the hyper parameters using different error size for a selected point.}
+ \label{fig:5}
+ \end{figure}
+ 
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/PointErr_GIAfield.pdf}
+ \end{center}
+ \caption[Posterior marginal standard errors of the latent field]{Posteriors marginal standard errors of the latent field using GPS data with different error on a single selected point. The selected point is marked as the circle within the red rectangle. Points are the GPS locations. Red points are positive errors and black negative. The circle size in the bottom plot represents the error size.}
+ \label{fig:6}
+ \end{figure}
+ 
+ \subsection{Change error size in general}
 
-(1) error size
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics{fig/sMesh_sErr_hyperpar.pdf}
+ \end{center}
+ \caption[Hyper parameter with small errors]{Posteriors of hyper parameters using GPS data with small measurement errors. Black: posterior, Red: prior.}
+ \label{fig:1}
+ \end{figure}
 
-(2) error cluster
+\begin{figure}[htbp]
+ \begin{center}
+ \includegraphics{fig/sMesh_LErr_hyperpar.pdf}
+ \end{center}
+ \caption[Hyper parameter with large errors]{Posteriors of hyper parameters using GPS data with large measurement errors. Black: posterior, Red: prior.}
+ \label{fig:2}
+ \end{figure}
+ 
+  \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/sMesh_sErr_GIAfield.pdf}
+ \end{center}
+ \caption[Posterior marginals of the latent field]{Posteriors marginal means and standard errors of the latent field using GPS data with small measurement errors. Points are the GPS locations. Red points are positive errors and black negative. The circle size in the bottom plot represents the error size.}
+ \label{fig:3}
+ \end{figure}
+ 
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/sMesh_LErr_GIAfield.pdf}
+ \end{center}
+ \caption[Posterior marginals of the latent field]{Posteriors marginal means and standard errors of the latent field using GPS data with large measurement errors. Points are the GPS locations. Red points are positive errors and black negative. The circle size in the bottom plot represents the error size.}
+ \label{fig:4}
+ \end{figure}
+ 
+ 
+ 
+\section{Effect of Mesh size}
+
+\begin{figure}[htbp]
+ \begin{center}
+ \includegraphics{fig/MeshSize_1hyperpar.pdf}
+ \end{center}
+ \caption[Hyper parameter for different mesh sizes]{Posteriors of hyper parameters estimated using different mesh sizes for the latnet process. Black: small, Red: medium, blue: large.}
+ \label{fig:2}
+ \end{figure}
 
 
-4. Test mesh size effect
-
-
-
-
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/MeshSize_1GIAfield.pdf}
+ \end{center}
+ \caption[Posterior marginals of the latent field from different mesh size]{Posteriors marginal standard errors of the latent field with different mesh sizes. Points are the GPS locations.}
+ \label{fig:4}
+ \end{figure}
+ 
 
 
 
