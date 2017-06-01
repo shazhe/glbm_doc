@@ -168,18 +168,52 @@ In the following, we use the ICE-6G results on one degree resolution as the prio
  \end{figure}
  
 
+\section{MCMC results}
+
+All tested on the smallest mesh grid and use univariate slice sampler for updating the SPDE parameters.
 
 
 
 
 
+\section{Experiment 1b}
 
 
+\begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/1bsMesh_hyperpar.pdf}
+ \end{center}
+ \caption[Posterior hyper parameters]{Posteriors of the hyper parameters using INLA.}
+ \label{fig:5}
+ \end{figure}
 
 
-
-
-
+\begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/1bsMesh_GIAfield.pdf}
+ \end{center}
+ \caption[Posterior field]{Posteriors GIA field using INLA.}
+ \label{fig:5}
+ \end{figure}
+ 
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.8]{fig/1bslice1_1000_hyperpars.pdf}
+ \end{center}
+ \caption[Posterior hyper parameters]{Posteriors of the hyper parameters using MCMC.}
+ \label{fig:5}
+ \end{figure}
+ 
+ \begin{figure}[htbp]
+ \begin{center}
+ \includegraphics[scale=0.55]{fig/1bslice1_1000_GIAfield1.pdf}
+ \end{center}
+ \caption[Posterior field]{Posteriors GIA field using MCMC.}
+ \label{fig:5}
+ \end{figure}
+ 
+ 
+ 
 
 %------------Y(^_^) I'm the happy separation line (^_^)Y-------------%
 \bibliographystyle{abbrvnat}
