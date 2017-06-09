@@ -248,13 +248,36 @@ In this section, we compare the estimation and prediction results from using dif
  \end{figure}
  
 \section{Priors for the hyper parameters}\label{sec:hyperpar}
-2. Transformation of the hyper parameter and choosing the prior
+The hyper parameters in the Mat{\`e}rn covariance function is the maginal variannce $\sigma^2$ and the range $\rho$ which is the distance at which two points are not correlated. These two parameters need to be coupled with the SPDE parameters $\kappa$ and $\tau$ for the sparse approximation. For a stationary process the transfromation between these two pairs of hyper parameters is given by 
+\begin{align}
+\sigma^2 = \frac{\Gamma(\nu)}{\Gamma(\alpha)(4\pi)^{d/2}\kappa^{2\nu} \tau^{2}}
+\end{align}. 
+where $d$ is the dimensionality of the spatial process, $\alpha$ is usually set to be 1 and $\nu = \alpha -d/2$. For the distance at which the correlation falls to approximately 0.13 for all $\nu > 1/2$
+\begin{align}
+\rho = (8\nu)^{1/2}/\kappa
+\end{align}
 
-\newpage
+It is usually helpful to set up the prior of the hyper parameters on a log scale and in INLA, they are represented as  
+\begin{align}
+\log \sigma = \log \sigma_0 + \theta_1 \\
+\log \rho = \log \rho_0 + \theta_2
+\end{align}
+where we asssume the prior of $\theta_1$ and $\theta_2$ are zero mean normal random variables with independent variance $\sigma_1^2$ and $\sigma_2^2$. These are equivalent to assume $\sigma$ and $\rho$ to have log normal distributions with mean $\log \sigma_0$ and $\log rho_0$ and variance  $\sigma_1^2$ and $\sigma_2^2$. It is usually more intuitive for us to set up the mean and variance for $\sigma$ and $\rho$ rather than on the log scale and hence we can use the following to tranform the mean and variance of the variable to the lognormal mean and varance.  Suppose $Y \sim \mbox{Lognormal}(\mu, \sigma^2)$ then
+\begin{align}
+\mathbb{E}(Y) = \exp(\mu + \sigma^2) \\
+\mathbb{V}(Y) = (\exp(\sigma^2)-1)\exp(2\mu + \sigma^2)
+\end{align}
+In our experiment, we set the prior mean and stanard deviatation of $\rho$ to be $500/6371$ and for $\sigma$, the mean to be $20$ and variance to be $40^2$ . Then we transform these to the log-normal distribution parameters.
+
+To transform this representation for $\tau$ and $\kappa$ that are used in INLA. We use the following
+\begin{align}
+\log \tau = \log \tau_0 - \theta_1 + \nu \theta_2 \\
+\log \kappa = \log \kappa_0 - \theta_2
+\end{align}
+where $\tau_0$ and $\kappa_0$ can be found by given $\rho_0$ and $\sigma_0$.
+
 \section{Test error size}
-3. Test the "Principle of stable inference" theorem 
-\subsection{Change error size of a single point}
- Compare the effect of error size using a single isolated point.
+Compare the effect of error size using a single isolated point.
  
  \begin{figure}[htbp]
  \begin{center}
