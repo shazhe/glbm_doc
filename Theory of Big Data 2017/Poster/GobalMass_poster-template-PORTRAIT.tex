@@ -1,0 +1,188 @@
+\documentclass[portrait,a0paper,fontscale=0.29, margin = 4em, final]{baposter}
+
+\usepackage[vlined]{algorithm2e}
+\usepackage{times}
+\usepackage{calc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{relsize}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{vwcol}
+\usepackage[T1]{fontenc}
+\usepackage{ae}
+\usepackage[round]{natbib}
+
+\usepackage{pst-solides3d}
+\definecolor{oxfordblue}{RGB}{5,60,150}
+
+\graphicspath{{images/}}
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%% Some math symbols used in the text
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ % Format
+ \newcommand{\RotUP}[1]{\begin{sideways}#1\end{sideways}}
+\newcommand{\ud}{\,\mathrm{d}}
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ % Multicol Settings
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \setlength{\columnsep}{0.7em}
+ \setlength{\columnseprule}{0mm}
+
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ % Save space in lists. Use this after the opening of the list
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \newcommand{\compresslist}{
+ \setlength{\leftmargin}{0pt}
+ \setlength{\itemsep}{0pt}
+ \setlength{\parskip}{0pt}
+ \setlength{\parsep}{0pt}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Begin of Document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Here starts the poster
+%%---------------------------------------------------------------------------
+%% Format it to your taste with the options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{poster}{
+ % Show grid to help with alignment
+ grid=false,
+ % Column spacing
+ colspacing= 1em,
+ columns=3,
+ % Color style
+ headerColorOne=oxfordblue,
+ borderColor=oxfordblue,
+ % Format of textbox
+ boxColorOne=white,
+ textborder=rectangle,
+ % Format of text header
+ headerborder=open,
+ headershape=roundedright,
+ headershade=plain,
+ background=none,
+ headerheight=0.1\textheight}
+ {}
+{}
+{}
+{}
+%\headerbox{Box title}
+%{name=title,span=3, row=0,column=0}{
+%Box body
+%}
+\setlength{\colheight}{\textheight}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Now define the boxes that make up the poster
+%%%---------------------------------------------------------------------------
+%%% Each box has a name and can be placed absolutely or relatively.
+%%% The only inconvenience is that you can only specify a relative position
+%%% towards an already declared box. So if you have a box attached to the
+%%% bottom, one to the top and a third one which should be inbetween, you
+%%% have to specify the top and bottom boxes before you specify the middle
+%%% box.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \headerbox{\color{white}{1. Motivation: A multilevel CAR model for forest restoration }}{name=intro,column=0,row=0, span=3}{
+\begin{multicols}{2}  
+\textbf{The Sabah biodiversity experiment}\\
+Measurements of more than 7000 trees in 124 study plots are collected over 10 years and researchers want to investigate:
+\begin{itemize}
+\item tree growth rate $\sim$ biodiversity $+$ species?
+\item any spatial correlation?
+\begin{itemize}
+\item tree level: $\varepsilon_{ij} | \delta(\varepsilon_{ij}) \sim \mathcal{N}(\rho_{e}\sum \delta(\varepsilon_{ij}), \sigma_e^2)$
+\item plot level: $b_j | \delta(b_j) \sim \mathcal{N}(\rho_p \sum \delta(b_j), \sigma_p^2)$
+\end{itemize}
+\end{itemize} 
+\textbf{A multilevel CAR model}
+\begin{align*}
+\boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta} + Z\boldsymbol{b} + \boldsymbol{\varepsilon}; \; \boldsymbol{b} \sim \mathcal{N}(\boldsymbol{0}, \Sigma_b), \; \boldsymbol{\varepsilon} \sim \mathcal{N}(\boldsymbol{0}, \Sigma_{\varepsilon})
+\end{align*}
+$ \Sigma_b = (I - \rho_p W_p)^{-1} \otimes diag(\Sigma_{b_j}), \; \Sigma_{b_j} = \sigma_b^2 I_{n_j}; 
+\Sigma_{\varepsilon} = \sigma^2 (I - \rho_e W_e)^{-1} $
+
+\centering
+\includegraphics[width = 0.4\textwidth]{images/SBE_experiment_design_graphic.pdf}\\
+\citep{Hector3303}
+\end{multicols}
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \headerbox{\color{white}{2. The likelihood evaluation}}{name=logLik,column=0,row=0, span = 2, below=intro}{ 
+ The log-likelihood function $\ell(\theta; y)$ is \\
+ \vspace{0.03cm}
+
+$ \propto \frac{\log(|\Sigma_{\varepsilon}| |\Sigma_b|)}{-2} + 
+\log \!\int \!\exp \!\left\{\frac{\boldsymbol{\tilde{e}}^T \Sigma_{\varepsilon}^{-1}\boldsymbol{\tilde{e}}^T +
+\boldsymbol{b}^T \Sigma_{b}^{-1} \boldsymbol{b}}{-2} \right\} \ud \boldsymbol{b} 
+\propto -\frac{1}{2}\left(\log|\Sigma_y| + \boldsymbol{e}^T \Sigma_{y}^{-1}\boldsymbol{e}^T \right)
+$ \\
+
+\vspace{0.02cm}
+ $\Sigma_y = Z^T \Sigma_b Z + \Sigma_{\varepsilon}, \;
+\boldsymbol{\tilde{e}} = \boldsymbol{y} -  \boldsymbol{X}\boldsymbol{\beta} - Z\boldsymbol{b}, \; 
+\boldsymbol{e} = \boldsymbol{y} -  \boldsymbol{X}\boldsymbol{\beta} $  \\
+ $|\Sigma_y|$ and $\Sigma_{y}^{-1}$ takes \textcolor{red}{$\mathcal{O}(n^3)$} flops but $\Sigma_{\varepsilon}^{-1}$ and $\Sigma_b^{-1}$ are \textcolor{red}{\emph{sparse}}!
+  }
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+  \headerbox{\color{white}{\large{3. The Monte Carlo likelihood}}}{name=MCL,column=2, below = intro}{
+  For the likelihood $L(\theta; y) = \int f_{\theta}(y,b) \ud b$, generate $s$ samples of ${b^*}^{(i)} \sim f_{\psi}(b|Y = y)$. \citep{Geyer1992}\\
+\textbf{MC likeihood}: \\
+ $\ell_{\psi}^{s}(\theta) = \log \frac{1}{s} \sum_i^{s} \frac{f_{\theta}(y, {b^*}^{(i)})}{f_{\psi}(y, {b^*}^{(i)})}$ \\
+ \textbf{MC MLE}:
+  $\hat{\theta}_{\psi}^{s} = \underset{\theta \in \Theta}{\operatorname{arg \, max}} \; \hat{\ell}_{\psi}^{s}(\theta)$\\
+\textbf{MC error}: depends on $d(\theta, \psi)$ and scales as $1/\sqrt{s}$.
+
+
+\centering
+  \includegraphics[width = 0.45\textwidth]{images/torus.pdf}
+  \includegraphics[width = 0.5\textwidth]{images/ExactEstimateVar.pdf}
+  }
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  \headerbox{\color{white}{4. MC-MLE through RSM}}{name=RSM,column=0,below=logLik, span = 2}{
+  Use evaluations at \emph{design points} to fit a low-order polynomials approximation to the target function within the \emph{design region}. Search for the maximum by exploring along the \emph{steepest ascent path}. \citep{box2007response} 
+
+\centering
+   \includegraphics[scale = 0.38]{images/rsmEvo1.pdf}
+    \includegraphics[scale = 0.38]{images/rsmEvo2.pdf}
+
+  }
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\headerbox{\color{white}{5. Conclusion}}{name=conclusion,column=2,below=MCL}{
+\begin{itemize}
+\item simulation-based likelihood inference procedure with stable implementation and acceptable computation time
+\begin{itemize}
+\item regardless of initial value
+\item \textcolor{red}{1 CPU hour} for the SBE data
+\end{itemize}
+\item fully automated and easy adaptation to more complicated spatial models.
+\item available in the package \textbf{mclcar}.
+\end{itemize}
+
+  }
+ 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\headerbox{\color{white}{References}}{name=ref,column=0,below=RSM, span = 3}{
+\renewcommand{\refname}{\vspace{-0.5cm}}
+\setlength{\bibsep}{0pt plus 4ex}
+\bibliographystyle{apalike}
+\footnotesize{\bibliography{references}}
+
+  }
+\end{poster}
+
+\end{document}
