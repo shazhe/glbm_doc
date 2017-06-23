@@ -1,4 +1,4 @@
-\documentclass[portrait,a0paper,fontscale=0.29, margin = 8em, final]{baposter}
+\documentclass[portrait,a1paper,fontscale=0.46, margin = 5em, final]{baposter}
 
 \usepackage[vlined]{algorithm2e}
 \usepackage{times}
@@ -77,23 +77,24 @@
  headerheight=0.12\textheight}
  % university logo
  {
-      \raisebox{0em}[5em][0em]{\includegraphics[scale = 0.7]{GM-logo.png}}
+      \raisebox{0em}[5em][0em]{\includegraphics[scale = 0.8]{GM-logo.png}}
  }
  % Title
  {\sc Spatio-temporal modelling for \\ \vspace{0.2em} global sea level change}
  % Author
- {Zhe Sha,  Maike Schumancher,  William Llovel, \\ 
- Jonathan Rougier and Jonathan Bamber
+ {\Large{Zhe Sha\textsuperscript{1},  Maike Schumancher\textsuperscript{1},  William Llovel\textsuperscript{1}, \\ 
+ Jonathan Rougier\textsuperscript{2} and Jonathan Bamber\textsuperscript{1}
  \\
   \vspace{0.1em}
- {University of Bristol}\\
- \hspace{-2em} 
+ {\textsuperscript{1}School of Geographical Sciences, University of Bristol \\
+  \textsuperscript{2}School of Mathematics, University of Bristol}}\\
+ \hspace{-3em} 
 \noindent\makebox[\linewidth][c]{\includegraphics[width = 1.1\paperwidth]{seplines}}
 }
  % department logo
  {
   %\begin{tabular}{r}
-    \raisebox{0em}[3em][0em]{\includegraphics[scale = 0.21]{UoB-logo-colour.jpg}}
+    \raisebox{0em}[3em][0em]{\includegraphics[scale = 0.23]{UoB-logo-colour.jpg}}
     %\raisebox{0em}[0em][0em]{\includegraphics[height=0.03\textheight]{oulogo}}
   %\end{tabular}
 
@@ -113,24 +114,26 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{1. Introduction and framework}{name=intro,column=0,row=0, span = 3}{
-  \setlength{\columnsep}{10pt}
-  \begin{multicols}{3}
-  \textbf{Motivation}
+  \begin{minipage}{0.25\textwidth}
+ \textbf{Motivation}
   
-Future sea level rise (SLR) is one of the most serious consequences of climate change. Traditionally, the Earth system components that contributes to SLR were treated separately and often led to inconsistencies between discipline-specific estimates of each part of the sea level budget.
+Future sea level rise (SLR) is one of the most serious consequences of climate change. Traditionally, the Earth system components, including oceans, land ice, terrestrial water storage, and solid Earth effects, that contribute to SLR were treated separately and often led to inconsistencies between discipline-specific estimates of each part of the sea level budget.
 
+\vspace{1.5em}
 Our project aims at producing a physically-based, data-driven solution for the complete coupled land-ocean-solid Earth system that is consistent with the full suite of observations, prior knowledge and fundamental geophysical constraints.
-
-\begin{figure}[H]
+  \end{minipage}
+ \begin{minipage}{0.4\textwidth}
+ \begin{figure}[H]
 \centering
-\includegraphics[width = 0.36\textwidth]{BHM}
-\caption{BHM framework for solving SLR}
+\includegraphics[width = 0.85\textwidth]{GMconcept-simplified}
+\caption{Global Mass concept and framework.}
 \end{figure}
-
-
+ \end{minipage}
+\begin{minipage}{0.34\textwidth}
 \begin{center}
-\textbf{Bayesian Hierarchical Model (BHM)}
+\textbf{Bayesian Hierarchical Model (BHM) }\cite{AZM2015}
 \end{center}
+Define $\bm{y}$ as the observations, $\bm{x}$ the latent process at the spatial unit of $\bm{y}$, $\bm{X}$ the latent process, and $\bm{\beta}$ and $\bm{\theta}$ the parameters to be estimated. 
 \begin{align*}
 \bm{y} | \bm{\beta}, \bm{x}, \bm{\theta} &\sim \mathcal{N}(\bm{P}(\bm{\beta}) \bm{x}, \bm{\Sigma_{obs}}), \\
 \bm{x} | \mathcal{A}, \bm{X}, \bm{\theta} &\sim \mathcal{N}(\mathcal{A}\bm{X}, \bm{Q}^{-1}(\bm{\theta})),\\
@@ -138,84 +141,76 @@ Our project aims at producing a physically-based, data-driven solution for the c
 \bm{\beta} &\sim \mathcal{N}(\bm{\mu}_{\bm{\beta}}, \bm{\Sigma}_{\bm{\beta}}),\\
 f(\bm{\theta}) &\sim \mathcal{N}(\bm{\mu}_{\bm{\theta}}, \bm{\Sigma}_{\bm{\theta}}).
 \end{align*}
-\hspace{2em}where $\mathcal{A}$ is a linear operator that maps physical process $\bm{X}$ into the observation space and $\bm{P}$ represents the relationship between the observations and the latent processes.
-\end{multicols}
+where $\bm{P}$ maps the latent process to  the observations, $\bm{\Sigma_{obs}}$ is a given measurement error matrix, $\mathcal{A}$ maps $\bm{X}$ into the spatial unit of $\bm{y}$, $\bm{Q}$ is a sparse precision matrix given by the stochastic partial differential equation (SPDE) approach \cite{SPDE}.
+\end{minipage}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \headerbox{2. Big data challenges}{name=data,column=0,span = 3, below = intro }{
-  
  \begin{minipage}{0.35\textwidth}
-\begin{itemize}
 \begin{figure}[H]
 \centering
 \includegraphics[width =\textwidth]{data}
 \caption{Temporal coverage of the observations.}
 \end{figure}
 
- \setlength{\itemsep}{0pt}
+\textbf{Challenges}
+
+\begin{itemize}\compresslist
 \item Massive volume of data sets with uncertainty in error estimates.
 \item Inconsistent temporal coverages and frequencies between the data sets.
 \item In-situ and satellite measurements exhibit various spatial footprints.
 \item Different spatially-varying mesh grids in high resolutions for SPDE approximation.
 \end{itemize}
+
+\textbf{Example: Glacio-Isostatic Adjustment (GIA)}
+
+GIA describes the ongoing movement of land once burdened by ice-age glaciers and makes a crucial contribution to sea level rise evaluation.
 \end{minipage}
 \begin{minipage}{0.65\textwidth}
 \begin{figure}[H]
 \centering
-\includegraphics[width = 0.8\textwidth]{graph}
-\caption{Graphical model for the GIA.}
+\includegraphics[width = 0.95\textwidth]{GIA}
+\caption{The data sets, meshes and graphical model for GIA.}
 \end{figure}
 \end{minipage}
   }
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{3. Example: the glacio-isostatic adjustment (GIA)}{name=result,column = 0, span = 2,
+\headerbox{3. Initial solution for the GIA process}{name=result,column = 0, span = 2,
  below = data}{
-\begin{multicols}{2}
-%\includegraphics[trim = 10 0 0 0, scale = 0.5, clip = true]{resid}
-%\includegraphics[trim = 10 0 0 0, scale = 0.5, clip = true]{resid2}
-\end{multicols}
-With my current design of implementation, the approximation to (\ref{eq:1})
-is not accurate enough and show a substantial variability. Therefore, only the
-fitting of the residual obtained from a GLM model is presented here.
-
-\vspace{0.5em}
-The approximate MLEs of are $\rho = 0.2308, \; \sigma^2 = 0.7028$, and they can be reused for
-constructing weights in GLM. Note the range of $\rho$ is about
-$(-0.25,0.25)$. The estimated $\rho$ shows a strong positive correlation.
-
-
+ \begin{minipage}{0.28\textwidth}
+Initial GIA solution combines global GPS data and prior means from a physical forward model, using a semi-regular mesh on a sphere at approximately 10 degree resolution.
+ 
+Right shows the predicted GIA mean field. The predicted errors at the GPS locations and a set of regular grid points are shown as blue disks with disk radius proportional to the error size. 
+ 
+ The data present strong signals at the GPS locations with much smaller predicted errors than elsewhere.
+ \end{minipage}
+\begin{minipage}{0.72\textwidth}
+\begin{figure}[H]
+\centering
+\includegraphics[width = \textwidth]{GIA_map}
+\caption{Predicted GIA mean field.}\label{fig:GIA}
+\end{figure}
+\end{minipage}
  }
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \headerbox{4. Future Work}{name=future,column=2, below = data}{
+  \headerbox{4. Future Work}{name=future,column=0, span = 2, below = result}{
 \begin{itemize}\compresslist
-\item Assume presence-only data \cite{Bhatt2013}
-\item Joint modelling the 277 species
-\item Occurrences collected at lower resolution with substantial variation in
-  explanatory variables over the region
-\item Occurrence data collected at different resolutions  \cite{Bhatt2013}
-\item Elaboration of the spatial covariance structure
+\item Integrating flexible temporal structure into the multivariate processes.
+\item Improving mesh quality and resolution.
+\item Estimating a data-driven GIA solution based on the full framework.
+\item Closing the sea level budget for the last four decades by adding physical constraints and more datasets.
 \end{itemize}
 
   }
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\headerbox{References}{name=ref,column=0, span = 2, below=result}{
-
-\renewcommand{\refname}{\vspace{-1em}}
-\bibliographystyle{abbrv}
-\bibliography{references,ecoapp}
-
-  }
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Acknowledgement}{name=ack,column=2,below=future}{
-Funded by the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme under grant agreement No 69418
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\headerbox{Acknowledgements}{name=ack,column=2,below=data}{
+\small{Funded by the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme under grant agreement No 69418.}
 \begin{figure}[H]
   \centering
   \begin{tabular}{c|c}
-    \subfloat{\includegraphics[width = 0.3\textwidth]{EUflag}} \hspace{1em} &
-    \hspace{1em} \subfloat{\includegraphics[width = 0.3\textwidth]{ERClogo}}
+    \subfloat{\includegraphics[width = 0.25\textwidth]{EUflag}} \hspace{2em} &
+    \hspace{2em} \subfloat{\includegraphics[width = 0.25\textwidth]{ERClogo}}
   \end{tabular}
 \end{figure}
 
@@ -230,6 +225,18 @@ Email: globalmass-project@bristol.ac.uk
 Follow us on Twitter: @GlobalMassTeam
 
   }
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\headerbox{References}{name=ref,column=2,  below=contact}{
+
+\renewcommand{\refname}{\vspace{-1em}}
+\bibliographystyle{abbrv}
+\footnotesize{\bibliography{references}}
+
+  }
+ 
 \end{poster}
 
 \end{document}
