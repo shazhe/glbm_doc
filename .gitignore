@@ -218,3 +218,11 @@ TSWLatexianTemp*
 
 # expex forward references with \gathertags
 *-tags.tex
+
+# Other
+*.RData
+*.Rda
+*.Rdata
+*.rda
+*.rdata
+*~
