@@ -4,7 +4,7 @@
 library(ggplot2)
 
 ## Create the base of word map
-world_map <- map_data("world")
+world_map <- map_data("world2")
 p <- ggplot() + coord_fixed() + xlab("") + ylab("") 
 #Add map to base plot
 base_world <- p + geom_polygon(data=world_map, aes(x=long, y=lat, group=group), 
@@ -113,8 +113,8 @@ load("glbm_doc/Theory of Big Data 2017/Poster/1blMesh_inla.RData")
 
 map_GIA <- ggplot(data=GIA_ice6g2) + geom_raster(aes(x = x_center, y = y_center, fill = GIA_mpost)) + 
   coord_fixed() + xlab("Longitude") + ylab("Latitude") + 
-  scale_x_continuous(limits=c(-180,180),  expand = c(0, 0)) + scale_y_continuous(limits=c(-90,90),  expand = c(0, 0)) + 
-  scale_fill_gradient2(low = "blue", mid = "pale green", high = "orange", midpoint = -5, name = "",
+  scale_x_continuous(limits=c(0,360),  expand = c(0, 0)) + scale_y_continuous(limits=c(-90,90),  expand = c(0, 0)) + 
+  scale_fill_gradient2(low = "dark blue", mid = "white", high = "red", midpoint = 0, name = "", limit = c(-15, 15),
                         guide = guide_colorbar(barwidth = 2, barheight = 10, label.position = "right")) 
 
 map_GIA2 <- map_GIA + geom_polygon(data=world_map, aes(x=long, y=lat, group=group), 
@@ -122,14 +122,14 @@ map_GIA2 <- map_GIA + geom_polygon(data=world_map, aes(x=long, y=lat, group=grou
 
 
 map_GIA3 <- map_GIA2 + geom_point(data=GPS_obs, aes(x=lon, y=lat), pch=19, 
-                                  size = GPS_spost*3, col = "blue", fill = "blue", alpha=0.5) 
+                                   col = "black") 
 
 GIA_std <- GIA_ice6g2[,c("x_center", "y_center", "GIA_spost")]
 GIA_std <- subset(GIA_std, x_center %in% seq(-170, 170, 15))
 GIA_std <- subset(GIA_std, y_center %in% seq(-82.5, 82.5, 12))
 
 map_GIA4 <- map_GIA3 + geom_point(data=GIA_std, aes(x=x_center, y=y_center), pch=19, size = GIA_std$GIA_spost*3,
-                                  col = "deepskyblue", fill = "deepskyblue", alpha=0.3)
+                                  col = "grey", fill = "grey", alpha=0.3)
 beauty <- 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
         panel.background = element_rect(fill = "white", colour = 'white'), 
@@ -144,7 +144,7 @@ beauty <-
 
 map_GIAf <- map_GIA4 + beauty + ggtitle("GIA (mm/year)") 
 
-png("GIA_map.png", width = 1200, height = 600, pointsize = 20)
+png("GIAdif_map.png", width = 1200, height = 600, pointsize = 20)
 print(map_GIAf)
 dev.off()
 
