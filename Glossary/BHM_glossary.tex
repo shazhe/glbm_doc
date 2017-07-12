@@ -1,0 +1,81 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{color}
+\usepackage{amsmath} % do fancy math
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{amsthm} % math theorem proof etc
+\usepackage{graphicx} % import images
+\usepackage{tikz} % draw images with latex
+\usepackage{pgf} % go with tikz
+\usepackage{subfigure}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage[round]{natbib}
+\usepackage{setspace}
+\usepackage[top=30mm, bottom=30mm, left=35mm,right=30mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[acronym]{glossaries}
+
+%% Compilation need terminal
+%pdflatex glossaries.tex
+%makeglossaries glossaries
+%pdflatex glossaries.tex
+
+\makeglossaries 
+\newglossaryentry{latex}
+{
+        name=latex,
+        description={Is a mark up language specially suited for 
+scientific documents}
+}
+ 
+\newglossaryentry{maths}
+{
+        name=mathematics,
+        description={Mathematics is what mathematicians do}
+}
+ 
+\newglossaryentry{formula}
+{
+        name=formula,
+        description={A mathematical expression}
+}
+ 
+\newacronym{gia}{GIA}{glacial isostatic adjustment}
+ 
+\newacronym{bhm}{BHM}{Bayesian hierarchical model}
+ 
+\begin{document}
+ \title{The Bayesian Hierarchical model and glossary}
+\author{Zhe Sha}
+\maketitle
+
+\onehalfspacing
+\numberwithin{equation}{section}
+\section{The Bayesian hierarchical model}
+In this section, we introduce the Bayesian hierarchical model using the \acrshort{gia} process as an example. We assume that the true \acrshort{gia} process is a real-valued spatial process continues on the sphere and denote it by $Y: \mathbb{S}^2 \mapsto \mathbb{R}$. 
+
+
+
+
+
+The \Gls{latex} typesetting markup language is specially suitable 
+for documents that include \gls{maths}. \Glspl{formula} are 
+rendered properly an easily once one gets used to the commands.
+ 
+Given a set of numbers, there are elementary methods to compute 
+its, which is abbreviated . This 
+process is similar to that used for the .
+ 
+ 
+\clearpage
+ 
+\printglossary[type=\acronymtype]
+ 
+\printglossary
+ 
+\end{document}
