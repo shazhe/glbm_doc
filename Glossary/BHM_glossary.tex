@@ -26,23 +26,23 @@
 %pdflatex glossaries.tex
 
 \makeglossaries 
-\newglossaryentry{latex}
+\newglossaryentry{hyperpars}
 {
-        name=latex,
-        description={Is a mark up language specially suited for 
-scientific documents}
+        name=hyper parameters,
+        description={parameters in defining the covariance structure of the latent process; in particular for a Gaussian process with Mat\'{e}rn
+                        covariance function, the hyper parameters are the \gls{lengthscale} $\rho$ and \gls{normvar} $\sigma^2$.}
 }
  
-\newglossaryentry{maths}
+\newglossaryentry{lengthscale}
 {
-        name=mathematics,
-        description={Mathematics is what mathematicians do}
+        name=lengthscale,
+        description={define and usually denoted by $\rho$}
 }
  
-\newglossaryentry{formula}
+\newglossaryentry{normvar}
 {
-        name=formula,
-        description={A mathematical expression}
+        name=norminal variance,
+        description={usually denoted by $\sigma^2$}
 }
  
 \newacronym{gia}{GIA}{glacial isostatic adjustment}
@@ -59,21 +59,12 @@ scientific documents}
 \section{The Bayesian hierarchical model}
 In this section, we introduce the Bayesian hierarchical model using the \acrshort{gia} process as an example. 
 
-We assume that the true \acrshort{gia} process is a real-valued spatial process continues on the sphere and denote it by $Y: \mathbb{S}^2 \mapsto \mathbb{R}$. 
+We assume that the true \acrshort{gia} process is a real-valued spatial process continues on the sphere and denote it by $Y: \mathbb{S}^2 \mapsto \mathbb{R}$. We use one of the \acrshort{gia} solution, say from one of the \emph{ice6g} models, as the prior mean of the true process and denote it by $\mu: \mathbb{S}^2 \mapsto \mathbb{R}$. Then the residuals $X: = Y - \mu$ can be modelled as a stationary Gaussian process on the phere $X \sim \mathcal{GP}(0, \kappa(\theta))$, where $\kappa(\theta)$ defines the covariance function with \gls{hyperpars} $\theta$.
+
+In order to assess the bias and uncertainties in the \emph{ice6g} solution, we use the GPS observations to update the \acrshort{gia} process. The GPS   data are the yearly trend of vertical movement in millimeter at the observed locations and it can be regard as the \acrshort{gia} process with measurement errors; therefore we model the GPS data as $X_i = A_iY_i + \varepsilon_i$.
 
 
 
-
-
-The \Gls{latex} typesetting markup language is specially suitable 
-for documents that include \gls{maths}. \Glspl{formula} are 
-rendered properly an easily once one gets used to the commands.
- 
-Given a set of numbers, there are elementary methods to compute 
-its, which is abbreviated . This 
-process is similar to that used for the .
- 
- 
 \clearpage
  
 \printglossary[type=\acronymtype]
