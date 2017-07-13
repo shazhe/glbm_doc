@@ -25,7 +25,15 @@
 %makeglossaries glossaries
 %pdflatex glossaries.tex
 
-\makeglossaries 
+\makeglossaries
+
+\newglossaryentry{fwmodel}
+{
+        name=forward model,
+        description={physical model, usually a (partial) differential equation system, used to
+                     solve certain geophysical process.}
+}
+
 \newglossaryentry{hyperpars}
 {
         name=hyper parameters,
@@ -44,10 +52,17 @@
         name=norminal variance,
         description={usually denoted by $\sigma^2$}
 }
- 
+
+
+\newacronym{bhm}{BHM}{Bayesian hierarchical model} 
 \newacronym{gia}{GIA}{glacial isostatic adjustment}
- 
-\newacronym{bhm}{BHM}{Bayesian hierarchical model}
+\newacronym{gp}{GP}{Gaussian process}
+\newacronym{gmrf}{GMRF}{Gaussian Markov random field}
+\newacronym{iid}{iid}{independent identically distributed}
+\newacronym{spde}{SPDE}{stochastic partial differential equation}
+
+
+
  
 \begin{document}
  \title{The Bayesian Hierarchical model and glossary}
@@ -57,13 +72,72 @@
 \onehalfspacing
 \numberwithin{equation}{section}
 \section{The Bayesian hierarchical model}
-In this section, we introduce the Bayesian hierarchical model using the \acrshort{gia} process as an example. 
+In this section, we introduce the Bayesian hierarchical model for predicting the global \acrshort{gia} process. 
 
-We assume that the true \acrshort{gia} process is a real-valued spatial process continues on the sphere and denote it by $Y: \mathbb{S}^2 \mapsto \mathbb{R}$. We use one of the \acrshort{gia} solution, say from one of the \emph{ice6g} models, as the prior mean of the true process and denote it by $\mu: \mathbb{S}^2 \mapsto \mathbb{R}$. Then the residuals $X: = Y - \mu$ can be modelled as a stationary Gaussian process on the phere $X \sim \mathcal{GP}(0, \kappa(\theta))$, where $\kappa(\theta)$ defines the covariance function with \gls{hyperpars} $\theta$.
+We assume that the true \acrshort{gia} process is a real-valued spatial process continues on the sphere and denote it by $\bm{Y}: \mathbb{S}^2 \mapsto \mathbb{R}$. We use one of the \acrshort{gia} solution, say from one of the \emph{ice6g} models, as the prior mean of the true process and denote it by $\bm{\mu}: \mathbb{S}^2 \mapsto \mathbb{R}$. Then the residuals between the true process and \gls{fwmodel} solutions can be modelled as a stationary Gaussian process on the sphere 
+\begin{align}\label{eq:GIAresid}
+ \bm{X}: = \bm{Y} - \bm{\mu} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta}))
+\end{align}
+where $\kappa(\bm{\theta})$ defines the covariance function with \gls{hyperpars} $\bm{\theta}$.
 
-In order to assess the bias and uncertainties in the \emph{ice6g} solution, we use the GPS observations to update the \acrshort{gia} process. The GPS   data are the yearly trend of vertical movement in millimeter at the observed locations and it can be regard as the \acrshort{gia} process with measurement errors; therefore we model the GPS data as $X_i = A_iY_i + \varepsilon_i$.
+In order to assess the bias and uncertainties in the \emph{ice6g} solutions, we use the GPS observations to update the \acrshort{gia} process. The GPS  data are the yearly trends of vertical movements in millimetre at the observed locations. These observations can be regarded as a linear map of the \acrshort{gia} process with measurement errors
+\begin{align}\label{eq:GPSi}
+Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, \; i = 1,\dots N.
+\end{align} 
+where $\bm{\mathcal{A}}_i$ is the linear operator that maps the \acrshort{gia} process to the $i^{\mbox{th}}$ GPS observation and $\varepsilon_i$ are assumed to be independent Gaussian errors $\mathcal{N}(0, e_i^2)$. In practice, $e_i^2$ can usually be estimated from raw GPS data and therefore we fix them at given values in the model. 
 
+Denote the linear operator for the GPS observation vector $\bm{Z}$ by 
+\begin{align*}
+\bm{\mathcal{A}} = \left[\begin{array}{c}
+ \bm{\mathcal{A}}_1\\ \vdots \\ \bm{\mathcal{A}}_N \end{array} \right]
+\end{align*}
+Then we can write equation \ref{eq:GPSi} into the vector form
+\begin{align}\label{eq:GPS}
+\bm{Z} = \bm{\mathcal{A}}\bm{Y} + \bm{\varepsilon} 
+\end{align}
 
+Now combining equations \ref{eq:GIAresid} and \ref{eq:GPS}, the system simplifies to
+\begin{align}
+\bm{\tilde{Z}} = \bm{Z} - \bm{\mathcal{A}}\bm{\mu}= \bm{\mathcal{A}}\bm{X} + \bm{\varepsilon}
+\end{align}
+Hence, our final model is
+\begin{align}
+\left\{ \begin{array}{l}
+\bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{X} + \bm{\varepsilon}, \; 
+\bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
+\bm{X} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta})) \\
+\bm{\theta} \sim \bm{\pi}(\bm{\theta})
+\end{array} \right.
+\end{align}
+where $\bm{\pi}(\bm{\theta})$ is the prior distribution for the \gls{hyperpars}.
+
+\section{GMRF Approximation}
+Suppose we would like to predict the \acrshort{gia} process on a set of grid points $\bm{S} = \{s_i: i = 1,\dots, m\}$ with a given resolution. The Gaussian process model can be computationally expensive for large scale inference since the Bayesian update scales as $\mathcal{O}(m^3)$ mainly due to the inverse of a dense covariance matrix. 
+
+At the same time, \acrlong{gmrf} is often used for modelling discrete spatial unit. The covariance structure is defined through its inverse, the precision matrix, which is usually sparse and thus has nice computational properties.
+
+The Gaussian process with Mat\'{e}rn covariance function can be treated as solutions to a class of \acrlong{spde}s \citep{Lindgren2011} which can then be approximated by \acrshort{gmrf} using finite element methods. 
+
+Denote by $\bm{\tilde{X}}$ the \acrshort{gmrf} approximation of $\bm{X}$ on a given triangulation of the sphere with piecewise linear basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then given any location $s \in \mathbb{S}^2$
+\begin{align}
+\bm{X}(s) \approx \bm{\phi}_i(s)^T\bm{\tilde{X}}
+\end{align}
+and for a given set $\bm{S}$ of locations, we have  
+\begin{align}
+\bm{X}(\bm{S}) \approx \bm{C}(\bm{S})\bm{\tilde{X}}
+\end{align}
+where the matrix $\bm{C}$ contains basis functions for all locations.
+
+Now with the GMRF approximation, our model becomes
+\begin{align}
+\left\{ \begin{array}{l}
+\bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{C}\bm{\tilde{X}} + \bm{\varepsilon}, \; 
+\bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
+\bm{\tilde{X}} \sim \mathcal{N}(\bm{0}, \bm{Q}^{-1}(\bm{\theta})) \\
+\bm{\theta} \sim \bm{\pi}(\bm{\theta})
+\end{array} \right.
+\end{align}
+where $\bm{Q}$ is the precision matrix of the \acrshort{gmrf} approximation.
 
 \clearpage
  
