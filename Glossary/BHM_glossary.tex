@@ -19,7 +19,7 @@
 \usepackage[top=30mm, bottom=30mm, left=35mm,right=30mm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[acronym]{glossaries}
-
+\newcommand{\ud}{\,\mathrm{d}}
 %% Compilation need terminal
 %pdflatex glossaries.tex
 %makeglossaries glossaries
@@ -31,14 +31,25 @@
 {
         name=forward model,
         description={physical model, usually a (partial) differential equation system, used to
-                     solve certain geophysical process.}
+                     solve certain geophysical process}
+}
+\newglossaryentry{fwmodelling}
+{
+        name=forward modelling,
+        description={physical model, usually a (partial) differential equation system, used to
+                     solve certain geophysical process}
+}
+\newglossaryentry{footprint}
+{
+        name=footprint,
+        description={aa}
 }
 
 \newglossaryentry{hyperpars}
 {
         name=hyper parameters,
         description={parameters in defining the covariance structure of the latent process; in particular for a Gaussian process with Mat\'{e}rn
-                        covariance function, the hyper parameters are the \gls{lengthscale} $\rho$ and \gls{normvar} $\sigma^2$.}
+                        covariance function, the hyper parameters are the \gls{lengthscale} $\rho$ and \gls{normvar} $\sigma^2$}
 }
  
 \newglossaryentry{lengthscale}
@@ -53,6 +64,36 @@
         description={usually denoted by $\sigma^2$}
 }
 
+\newglossaryentry{predmean}
+{
+        name=predicted mean,
+        description={the mean with respect to the predictive distribution}
+}
+\newglossaryentry{preduncert}
+{
+        name=predicted uncertainty,
+        description={the standard deviation with respect to the predictive distribution}
+}
+\newglossaryentry{predist}
+{
+        name=predictive distribution,
+        description={the posterior marginal distribution of a given location $X_i$ that integrate out the unknown parameters and $\bm{X_{-i}}$}
+}
+
+
+
+\newglossaryentry{prior}
+{
+        name=prior distribution,
+        description={the probability distribution for the (hyper) parameters or latent processes}
+}
+
+\newglossaryentry{priorinfo}
+{
+        name=prior information,
+        description={information for setting up the model, including the values for the parameters,
+                     constraints,  etc.}
+}
 
 \newacronym{bhm}{BHM}{Bayesian hierarchical model} 
 \newacronym{gia}{GIA}{glacial isostatic adjustment}
@@ -60,9 +101,9 @@
 \newacronym{gmrf}{GMRF}{Gaussian Markov random field}
 \newacronym{iid}{iid}{independent identically distributed}
 \newacronym{spde}{SPDE}{stochastic partial differential equation}
-
-
-
+\newacronym{inla}{INLA}{integrated nested Laplace approximation}
+\newacronym{mcmc}{MCMC}{Markov chain Monte Carlo}
+\newacronym{pdf}{pdf}{probability density function}
  
 \begin{document}
  \title{The Bayesian Hierarchical model and glossary}
@@ -71,6 +112,13 @@
 
 \onehalfspacing
 \numberwithin{equation}{section}
+
+
+
+\section{Forward modelling and spatial support}
+
+
+
 \section{The Bayesian hierarchical model}
 In this section, we introduce the Bayesian hierarchical model for predicting the global \acrshort{gia} process. 
 
@@ -84,7 +132,7 @@ In order to assess the bias and uncertainties in the \emph{ice6g} solutions, we 
 \begin{align}\label{eq:GPSi}
 Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, \; i = 1,\dots N.
 \end{align} 
-where $\bm{\mathcal{A}}_i$ is the linear operator that maps the \acrshort{gia} process to the $i^{\mbox{th}}$ GPS observation and $\varepsilon_i$ are assumed to be independent Gaussian errors $\mathcal{N}(0, e_i^2)$. In practice, $e_i^2$ can usually be estimated from raw GPS data and therefore we fix them at given values in the model. 
+where $\bm{\mathcal{A}}_i$ is the linear operator that maps the \acrshort{gia} process to the $i^{\mbox{th}}$ GPS observation and $\varepsilon_i$ are assumed to be independent Gaussian errors $\mathcal{N}(0, e_i^2)$. In practice, $e_i^2$ can usually be estimated from raw GPS data and therefore we set them to be fixed values from \gls{priorinfo}. 
 
 Denote the linear operator for the GPS observation vector $\bm{Z}$ by 
 \begin{align*}
@@ -106,10 +154,10 @@ Hence, our final model is
 \bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{X} + \bm{\varepsilon}, \; 
 \bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
 \bm{X} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta})) \\
-\bm{\theta} \sim \bm{\pi}(\bm{\theta})
+\bm{\theta} \sim \bm{p}(\bm{\theta})
 \end{array} \right.
 \end{align}
-where $\bm{\pi}(\bm{\theta})$ is the prior distribution for the \gls{hyperpars}.
+where $\bm{\pi}(\bm{\theta})$ is the \gls{prior} for the \gls{hyperpars}.
 
 \section{GMRF Approximation}
 Suppose we would like to predict the \acrshort{gia} process on a set of grid points $\bm{S} = \{s_i: i = 1,\dots, m\}$ with a given resolution. The Gaussian process model can be computationally expensive for large scale inference since the Bayesian update scales as $\mathcal{O}(m^3)$ mainly due to the inverse of a dense covariance matrix. 
@@ -134,10 +182,46 @@ Now with the GMRF approximation, our model becomes
 \bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{C}\bm{\tilde{X}} + \bm{\varepsilon}, \; 
 \bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
 \bm{\tilde{X}} \sim \mathcal{N}(\bm{0}, \bm{Q}^{-1}(\bm{\theta})) \\
-\bm{\theta} \sim \bm{\pi}(\bm{\theta})
+\bm{\theta} \sim \bm{p}(\bm{\theta})
 \end{array} \right.
 \end{align}
 where $\bm{Q}$ is the precision matrix of the \acrshort{gmrf} approximation.
+
+\section{Bayesian Inference and prediction}
+The Bayesian inference requires finding the posterior distributions of the hyper parameters and the latent process. The \acrfull{mcmc} can be used in general to sample from the posteriors and the \acrfull{inla} is a fast approximation method. In the following, we use $\bm{\pi}$ for a general \acrshort{pdf} and define a few terms used in our Bayesian inference.
+
+The Bayesian inference draw conclusions from the posterior distribution 
+\begin{align}
+\bm{\pi}(\bm{X}, \bm{\theta} | \bm{\tilde{Z}}) = \frac{\bm{\pi}(\bm{X},\bm{\theta}, \bm{\tilde{Z}})}{\bm{\pi}(\bm{\tilde{Z}})}
+=\frac{\bm{\pi}(\bm{\tilde{Z}}| \bm{X}, \bm{\theta}) \bm{\pi}(\bm{X}|\bm{\theta})\bm{\pi}(\bm{\theta})}
+{\int_{\bm{\mathcal{X}}, \bm{\Theta}}\bm{\pi}(\bm{\tilde{Z}}| \bm{X}, \bm{\theta}) \bm{\pi}(\bm{X}|\bm{\theta})\bm{\pi}(\bm{\theta})\ud\bm{X} \ud\bm{\theta}}
+\end{align}
+This is the joint distribution of the latent process and the hyper parameters but in practice we are more interested in the posterior marginals for inference on parameters and prediction of the latent filed separately. For simplicity, we use posterior distribution for 
+\begin{align}
+\bm{\pi}(\bm{\theta}| \bm{\tilde{Z}}) = 
+\int_{\bm{\mathcal{X}}} \bm{\pi}(\bm{X}, \bm{\theta} | \bm{\tilde{Z}}) \ud \bm{X}
+\end{align}
+the posterior marginal distribution for the hyper parameters. Inference on the parameters is not of crucial importance here but provides as sanity checks for the process property such as the length of spatial correlation. The aim of the study is to predict the latent process and the corresponding uncertainty on a fine resolution map; hence define the joint predictive distribution of the latent process to be 
+\begin{align}
+\bm{\pi}(\bm{X}| \bm{\tilde{Z}}) = 
+\int_{\bm{\Theta}} \bm{\pi}(\bm{X}, \bm{\theta} | \bm{\tilde{Z}}) \ud \bm{\theta}
+\end{align}
+the posterior marginal distribution of the latent process that integrate out the uncertainty of the hyper parameters. In practice, we are more interested in predicting the marginal means and variances  at a given set of locations; hence we define the point-wise \gls{predist} to be 
+\begin{align}
+\bm{\pi}(X_i | \bm{\tilde{Z}}) = \int_{\bm{\mathcal{X}_{-i}}} \bm{\pi}(\bm{X} | \bm{\tilde{Z}}) \ud \bm{X_{-i}}
+\end{align}
+where $X_i$ is the latent process at location $i$ and $\bm{X_{-i}}$ are $\bm{X}$ elsewhere. The \gls{predmean} $X_i^*$ and \gls{preduncert} $\mbox{u}(X_i)$ are the expectation and standard deviation with respect to $\bm{\pi}(X_i | \bm{\tilde{Z}})$
+\begin{align}
+&X_i^* = \mathbb{E}(X_i| \bm{\tilde{Z}}) = 
+\int_{\mathbb{R}} X_i \bm{\pi}(X_i | \bm{\tilde{Z}}) \ud X_i \\
+&\mbox{u}(X_i) = \sqrt{\mbox{Var}(X_i| \tilde{Z})} = \sqrt{\int_{\mathbb{R}} (X_i - X_i^*)^2\bm{\pi}(X_i | \bm{\tilde{Z}}) \ud X_i}
+\end{align}
+
+The \acrshort{inla} method directly approximate the $\bm{\pi}(X_i | \bm{\tilde{Z}})$ and provide the predicted mean and uncertainty as summary statistics. For the \acrshort{mcmc} approach, the \gls{predist} can be approximate by the posterior sample distribution of $X_i$ and the \gls{predmean} and \gls{preduncert} by the sample mean and standard error.
+
+\acrshort{inla} is much faster and more efficient than MCMC in providing the \gls{predist} but it provides limited information on the joint posterior distributions. The MCMC samples can be used in various ways for exploring the posteriors.
+
+
 
 \clearpage
  
