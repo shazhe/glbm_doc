@@ -15,6 +15,7 @@
 \newcommand{\ud}{\,\mathrm{d}}
 \newcommand{\vx}{\mathbf{x}}
 \usetheme{Copenhagen}
+\usecolortheme{rose}
 \setbeamertemplate{navigation symbols}{}
 
 %% Title slide formatting %%
@@ -76,7 +77,7 @@
 }
 
 \setbeamerfont{frametitle}{size=\LARGE}
-\setbeamerfont{framesubtitle}{size=\normalsize}
+\setbeamerfont{framesubtitle}{size=\large}
 \setbeamertemplate{frametitle}
 {%
 
@@ -178,7 +179,7 @@
 &\color{red}\hspace{3.3cm} \mbox{mass} \hspace{2cm}\mbox{density} \hspace{1.2cm} \mbox{ocean basins}
 \end{align*}
 
-- GIA: glacio-isostatic adjustment
+- GIA: glacial isostatic adjustment
 
 - inconsistencies between the dicipline-specific etimates
 \end{block}
@@ -202,7 +203,25 @@
 %----------- slide --------------------------------------------------%
 \section{modeling the GIA process}
 \begin{frame}
-\frametitle{What is GIA?}
+\frametitle{First step -- modelling GIA}
+\framesubtitle{What is GIA?}
+
+
+\begin{minipage}[c]{0.4\textwidth}
+\includegraphics[width = \textwidth]{images/gia}
+
+\tiny{Figure courtesy of the Canadian Geodetic Survey, Natural Resources Canada.}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.55\textwidth}
+\textbf{GIA - glacial isostatic adjustment}
+\begin{itemize}
+\item  vertical displacement of the Earth's crust once burdened by ice-age glaciers (\textcolor{red}{$\sim$20,000 yrs ago})
+\item  constant over the time scale of this study (\textcolor{red}{1981-2020})
+\item Regional descrepencies in estimates from physical models, e.g. ICE-6G \citep{Peltier}
+\end{itemize}
+\end{minipage}
+
 
 \end{frame}
 
@@ -210,116 +229,191 @@
 %----------- slide --------------------------------------------------%
 \begin{frame}{The GIA process}
 
-We assume that the true GIA process is a real-valued spatial process continues on the sphere and denote it by $\bm{Y}: \mathbb{S}^2 \mapsto \mathbb{R}$. We use one of the GIA solution, say from one of the \emph{ice6g} models, as the prior mean of the true process and denote it by $\bm{\mu}: \mathbb{S}^2 \mapsto \mathbb{R}$. Then the residuals between the true process and forward model solutions can be modelled as a stationary Gaussian process on the sphere 
+\vspace{0.3cm}
+\begin{minipage}[c]{0.45\textwidth}
+Denote the true GIA process by 
+$\bm{Y}: \mathbb{S}^2 \mapsto \mathbb{R},$
+and the prior mean trend by
+$\bm{\mu}: \mathbb{S}^2 \mapsto \mathbb{R}$.
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.5\textwidth}
+\centering
+\includegraphics[width = \textwidth, clip]{images/ice6g}
+
+\tiny{GIA estimates from a ICE-6G model.}
+\end{minipage}
+
+\vspace{0.3cm}
+After detrend, the residuals become stationary and assume
 \begin{align}\label{eq:GIAresid}
- \bm{X}: = \bm{Y} - \bm{\mu} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta}))
+ \bm{X}: = \bm{Y} - \bm{\mu} \sim \mathcal{GP}(\bm{0}, \kappa(\rho, \sigma^2))
 \end{align}
-where $\kappa(\bm{\theta})$ defines the covariance function with hyper parameters $\bm{\theta}$.
+$\kappa(\rho, \sigma^2)$ - Mat{\'e}rn covariance function with length-scale and variance parameters $\rho$ and $\sigma^2$.
 
 \end{frame}
 
 %----------- slide --------------------------------------------------%
-\begin{frame}{The GPS data}
-The GPS  data are the yearly trends of vertical movements in millimetre at the observed locations. 
+\begin{frame}{The GPS observations}
 
-In practice, $e_i^2$ can usually be estimated from raw GPS data and therefore we set them to be fixed values from prior information. 
+The GPS observation at the $i^{th}$ selected station $Z_i$ can be decomposed as yearly trend of vertical movment in the Earth's surface and measurement error $\varepsilon_i \sim \mathcal{N}(0, e_i^2) $.
+
+\begin{minipage}[c]{0.4\textwidth}
+\centering
+\includegraphics[width=0.8\textwidth]{images/GPSstation}
+
+\tiny{A GPS station in Antarctic.}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.6\textwidth}
+\centering
+\includegraphics[width=0.8\textwidth]{images/GPSts}
+\end{minipage}
+
+$e_i^2$  is the estimated from raw GPS time series and fixed. 
 \end{frame}
 
 %----------- slide --------------------------------------------------%
-\begin{frame}{From process to observations}
-These observations can be regarded as a linear map of the GIA process with measurement errors
+\begin{frame}{Forward modelling}
+\framesubtitle{From process to observations}
+
+\begin{minipage}[c]{0.48\textwidth}
+\begin{center}
+\includegraphics[width = \textwidth]{images/footprint}
+\end{center}
+\tiny{*GRACE: the Gravity Recovery And Climate Experiment satellites}
+
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.5\textwidth}
+Define $\bm{\mathcal{A}_i}$ as the map from the latent process over the appropriate spatial \emph{\textbf{foot print}} to the $i^{th}$ observations,
 \begin{align}\label{eq:GPSi}
-Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, \; i = 1,\dots N.
+Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, 
 \end{align} 
-where $\bm{\mathcal{A}}_i$ is the linear operator that maps the GIA process to the $i^{\mbox{th}}$ GPS observation and $\varepsilon_i$ are assumed to be independent Gaussian errors $\mathcal{N}(0, e_i^2)$. 
 
-Denote the linear operator for the GPS observation vector $\bm{Z}$ by 
-\begin{align*}
-\bm{\mathcal{A}} = \left[\begin{array}{c}
- \bm{\mathcal{A}}_1\\ \vdots \\ \bm{\mathcal{A}}_N \end{array} \right]
-\end{align*}
-Then we can write equation \ref{eq:GPSi} into the vector form
+ $\bm{\mathcal{A}_i}$ is usually a linear operator 
+ \begin{itemize}
+ \item point $\to$ point
+ \item area $\to$ point
+ \item area $\to$ area
+ \end{itemize}
+\end{minipage}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}{The BHM for GIA}
+
+Denote by $\bm{\mathcal{A}}^T = \left[
+ \bm{\mathcal{A}}_1^T, \cdots,\bm{\mathcal{A}}_N^T \right]$
+Then we can have the vector form for equation \ref{eq:GPSi}
 \begin{align}\label{eq:GPS}
 \bm{Z} = \bm{\mathcal{A}}\bm{Y} + \bm{\varepsilon} 
 \end{align}
-
-\end{frame}
-
-%----------- slide --------------------------------------------------%
-\begin{frame}{Bayesian update of the GIA process}
-\begin{align}
+\begin{block}{Bayesian hierarchical model for GIA}
+Combine the observation equation \ref{eq:GPS} and the process equation \ref{eq:GIAresid}
+\begin{align}\label{eq:BHM}
 \left\{ \begin{array}{l}
 \bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{X} + \bm{\varepsilon}, \; 
 \bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
-\bm{X} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta})) \\
-\bm{\theta} \sim \bm{p}(\bm{\theta})
+\bm{X} \sim \mathcal{GP}(\bm{0}, \kappa(\rho, \sigma^2)) \\
+\rho \sim \bm{\pi}(\rho), \;\;\; \sigma^2 \sim \bm{\pi}(\sigma^2)
 \end{array} \right.
 \end{align}
+\end{block}
+
 \end{frame}
 
+\begin{frame}{Predicting GIA}
+\begin{block}{Predicted mean and uncertainty of GIA}
+Pointwise Bayesian update of the GIA process on a fine grid. For grid point $X_i$, the predictive distribution is
+\begin{align}
+\bm{\pi}(X_i | \bm{\tilde{Z}}) = \int_{\bm{\mathcal{X}_{-i}}} \bm{\pi}(\bm{X} | \bm{\tilde{Z}}) \ud \bm{X_{-i}}
+\end{align}
+\begin{description}
+\item[predicted mean] $X_i^* = \mathbb{E}(X_i| \bm{\tilde{Z}})$
+\item[predicted uncertainty] $u_i^* = \mbox{sd}(X_i| \bm{\tilde{Z}})$
+\end{description}
+
+\end{block}
+\end{frame}
 
 %----------- Section --------------------------------------------------%
 \section{The SPDE Approach}
 \begin{frame}{The GMRF approximation}
-The Gaussian process model can be computationally expensive for large scale inference since the Bayesian update scales as $\mathcal{O}(m^3)$ mainly due to the inverse of a dense covariance matrix. 
+\begin{itemize}
+\item Bayesian update of the GP on a grid of $m$ points scales as $\mathcal{O}(m^3)$, $m \sim 10^5$ for a $1^\circ $ global grid.
+\item Gaussian Markov random filed (GMRF) with sparse precision matrix  has much better scaling property.
+\end{itemize}
 
-The Gaussian process with Mat\'{e}rn covariance function can be treated as solutions to a class of SPDEs \citep{Lindgren2011} which can then be approximated by GMRF using finite element methods. 
+\begin{block}{The SPDE approach \citep{Lindgren2011}} 
 
-Denote by $\bm{\tilde{X}}$ the GMRF approximation of $\bm{X}$ on a given triangulation of the sphere with piecewise linear basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then given any location $s \in \mathbb{S}^2$
+Denote by $\bm{\tilde{X}}$ the GMRF approximation of $\bm{X}$ on a given triangulation with basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then  $s \in \mathbb{S}^2$
 \begin{align}
 \bm{X}(s) \approx \bm{\phi}_i(s)^T\bm{\tilde{X}}
 \end{align}
-and for a given set $\bm{S}$ of locations, we have  
-\begin{align}
-\bm{X}(\bm{S}) \approx \bm{C}(\bm{S})\bm{\tilde{X}}
-\end{align}
-where the matrix $\bm{C}$ contains basis functions for all locations.
-
-
+For a grid $\bm{S} \subset \mathbb{S}$ of locations, we find the weight matrix $\bm{C}$ and write $\bm{X}(\bm{S}) \approx \bm{C}\bm{\tilde{X}}$.
+\end{block}
 \end{frame}
 
 \begin{frame}{The GMRF approximation}
-\begin{align}
+Now the BHM \ref{eq:BHM} becomes
+\begin{align}\label{eq:BHM_gmrf}
 \left\{ \begin{array}{l}
 \bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{C}\bm{\tilde{X}} + \bm{\varepsilon}, \; 
 \bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
-\bm{\tilde{X}} \sim \mathcal{N}(\bm{0}, \bm{Q}^{-1}(\bm{\theta})) \\
-\bm{\theta} \sim \bm{p}(\bm{\theta})
+\bm{\tilde{X}} \sim \mathcal{N}(\bm{0}, \bm{Q}^{-1}(\rho, \sigma^2)) \\
+\rho \sim \bm{\pi}(\rho), \;\;\; \sigma^2 \sim \bm{\pi}(\sigma^2)
 \end{array} \right.
 \end{align}
-where $\bm{Q}$ is the precision matrix of the GMRF approximation.
+where $\bm{\tilde{X}} $ is defined by the precision matrix $\bm{Q}$
 
 \end{frame}
 
 %----------- slide --------------------------------------------------%
 \begin{frame}{Choosing the mesh on sphere}
+\includegraphics[width=0.5\textwidth]{images/GIA_mesh1}
+\includegraphics[width=0.5\textwidth]{images/GIA_mesh2}
 
 \end{frame}
 
 %----------- Section --------------------------------------------------%
 \section{First result for GIA}
 \begin{frame}{First solution for GIA}
+\centering
 \includegraphics[width = \textwidth]{images/GIA_map}
 \end{frame}
 
 %----------- Section --------------------------------------------------%
 \section{Conclusion}
 \begin{frame}{Conclusion}
-Conclusion and future work
+
+\begin{itemize}
+\item Test the our statistical framework on the GIA.
+\item Find a better mesh.
+\begin{itemize}
+\item Adaptive -- fast computation
+\item regularity -- stable approximation
+\end{itemize}
+\item Need better quality GPS data.
+\item Extend to the full system.
+\end{itemize}
+
 
 \end{frame}
-
-
-\begin{frame}[plain]
-Thank you!
-Questions?
-\end{frame}
-
 
 %----------- slide --------------------------------------------------%
-\begin{frame}[plain]{References}
-\bibliographystyle{plainnat}
+\begin{frame}{References}
+\bibliographystyle{apalike}
 \small{\bibliography{references}}
 \end{frame}
+
+
+\begin{frame}{Questions}
+\centering
+\Huge
+Thank you!
+\end{frame}
+
 
 \end{document}
