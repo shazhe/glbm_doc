@@ -270,7 +270,7 @@ The GPS observation at the $i^{th}$ selected station $Z_i$ can be decomposed as 
 \includegraphics[width=0.8\textwidth]{images/GPSts}
 \end{minipage}
 
-$e_i^2$  is the estimated from raw GPS time series and fixed. 
+$e_i^2$s  are the estimated from raw GPS time series and fixed. 
 \end{frame}
 
 %----------- slide --------------------------------------------------%
@@ -305,8 +305,8 @@ Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i,
 \begin{frame}{The BHM for GIA}
 
 Denote by $\bm{\mathcal{A}}^T = \left[
- \bm{\mathcal{A}}_1^T, \cdots,\bm{\mathcal{A}}_N^T \right]$
-Then we can have the vector form for equation \ref{eq:GPSi}
+ \bm{\mathcal{A}}_1^T, \cdots,\bm{\mathcal{A}}_N^T \right]$,
+then we can have the vector form for equation \ref{eq:GPSi}
 \begin{align}\label{eq:GPS}
 \bm{Z} = \bm{\mathcal{A}}\bm{Y} + \bm{\varepsilon} 
 \end{align}
@@ -332,7 +332,7 @@ Pointwise Bayesian update of the GIA process on a fine grid. For grid point $X_i
 \end{align}
 \begin{description}
 \item[predicted mean] $X_i^* = \mathbb{E}(X_i| \bm{\tilde{Z}})$
-\item[predicted uncertainty] $u_i^* = \mbox{sd}(X_i| \bm{\tilde{Z}})$
+\item[predicted uncertainty] $u_i^* = \mbox{s.d.}(X_i| \bm{\tilde{Z}})$
 \end{description}
 
 \end{block}
@@ -389,7 +389,7 @@ where $\bm{\tilde{X}} $ is defined by the precision matrix $\bm{Q}$
 \begin{frame}{Conclusion}
 
 \begin{itemize}
-\item Test the our statistical framework on the GIA.
+\item Test the statistical framework on the GIA.
 \item Find a better mesh.
 \begin{itemize}
 \item Adaptive -- fast computation
