@@ -181,7 +181,7 @@
 
 - GIA: glacial isostatic adjustment
 
-- inconsistencies between the dicipline-specific etimates
+- inconsistencies between the discipline-specific estimates
 \end{block}
 \begin{block}{GlobalMass Aims}
 \begin{itemize}
@@ -193,10 +193,10 @@
 %----------- slide --------------------------------------------------%
 \end{frame}
 
-\begin{frame}{The Bayesian hierachical model}
+\begin{frame}{The Bayesian hierarchical model}
 \vspace{0.5cm}
 \centering
-\includegraphics[height = 0.7\textheight]{images/GMconcept-simplified}
+\includegraphics[height =0.7\textheight]{images/GMconcept-simplified}
 
 \end{frame}
 
@@ -218,7 +218,7 @@
 \begin{itemize}
 \item  vertical displacement of the Earth's crust once burdened by ice-age glaciers (\textcolor{red}{$\sim$20,000 yrs ago})
 \item  constant over the time scale of this study (\textcolor{red}{1981-2020})
-\item Regional descrepencies in estimates from physical models, e.g. ICE-6G \citep{Peltier}
+\item Regional discrepancies in estimates from physical models, e.g. ICE-6G \citep{Peltier}
 \end{itemize}
 \end{minipage}
 
@@ -245,18 +245,19 @@ $\bm{\mu}: \mathbb{S}^2 \mapsto \mathbb{R}$.
 \end{minipage}
 
 \vspace{0.3cm}
-After detrend, the residuals become stationary and assume
+After de-trend, the residuals become stationary and assume
 \begin{align}\label{eq:GIAresid}
- \bm{X}: = \bm{Y} - \bm{\mu} \sim \mathcal{GP}(\bm{0}, \kappa(\rho, \sigma^2))
+ \bm{X}: = \bm{Y} - \bm{\mu} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta}))
 \end{align}
-$\kappa(\rho, \sigma^2)$ - Mat{\'e}rn covariance function with length-scale and variance parameters $\rho$ and $\sigma^2$.
+$\kappa(\bm{\theta})$ -- Mat{\'e}rn covariance function with parameter $\bm{\theta} = (\rho, \sigma^2)$ for the length-scale and variance.
 
 \end{frame}
 
 %----------- slide --------------------------------------------------%
 \begin{frame}{The GPS observations}
-
-The GPS observation at the $i^{th}$ selected station $Z_i$ can be decomposed as yearly trend of vertical movment in the Earth's surface and measurement error $\varepsilon_i \sim \mathcal{N}(0, e_i^2) $.
+\framesubtitle{Vertical movement in the Earth's surface}
+\vspace{0.3cm}
+At a selected GPS station $i$, the time series are processed into an uplift rate $Z_i$ (mm/yr) and a measurement error  $\varepsilon_i \sim \mathcal{N}(0, e_i^2)$, where $e_i$ is taken to be the standard error of the time series estimate.
 
 \begin{minipage}[c]{0.4\textwidth}
 \centering
@@ -270,7 +271,7 @@ The GPS observation at the $i^{th}$ selected station $Z_i$ can be decomposed as 
 \includegraphics[width=0.8\textwidth]{images/GPSts}
 \end{minipage}
 
-$e_i^2$s  are the estimated from raw GPS time series and fixed. 
+
 \end{frame}
 
 %----------- slide --------------------------------------------------%
@@ -286,7 +287,7 @@ $e_i^2$s  are the estimated from raw GPS time series and fixed.
 \end{minipage}%
 \hfill
 \begin{minipage}[c]{0.5\textwidth}
-Define $\bm{\mathcal{A}_i}$ as the map from the latent process over the appropriate spatial \emph{\textbf{foot print}} to the $i^{th}$ observations,
+Define $\bm{\mathcal{A}_i}$ as the map from the latent process over the appropriate spatial \emph{\textbf{foot print}} to the $i^{th}$ observation,
 \begin{align}\label{eq:GPSi}
 Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, 
 \end{align} 
@@ -303,21 +304,21 @@ Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i,
 
 %----------- slide --------------------------------------------------%
 \begin{frame}{The BHM for GIA}
-
+\vspace{0.3cm}
 Denote by $\bm{\mathcal{A}}^T = \left[
  \bm{\mathcal{A}}_1^T, \cdots,\bm{\mathcal{A}}_N^T \right]$,
-then we can have the vector form for equation \ref{eq:GPSi}
+then we can have the vector form for equation \eqref{eq:GPSi}
 \begin{align}\label{eq:GPS}
 \bm{Z} = \bm{\mathcal{A}}\bm{Y} + \bm{\varepsilon} 
 \end{align}
 \begin{block}{Bayesian hierarchical model for GIA}
-Combine the observation equation \ref{eq:GPS} and the process equation \ref{eq:GIAresid}
+Combine the observation equation \eqref{eq:GPS} and the process equation \eqref{eq:GIAresid}
 \begin{align}\label{eq:BHM}
 \left\{ \begin{array}{l}
 \bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{X} + \bm{\varepsilon}, \; 
 \bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
-\bm{X} \sim \mathcal{GP}(\bm{0}, \kappa(\rho, \sigma^2)) \\
-\rho \sim \bm{\pi}(\rho), \;\;\; \sigma^2 \sim \bm{\pi}(\sigma^2)
+\bm{X} \sim \mathcal{GP}(\bm{0}, \kappa(\bm{\theta})) \\
+\bm{\theta} \sim \bm{\pi}(\bm{\theta})
 \end{array} \right.
 \end{align}
 \end{block}
@@ -325,63 +326,118 @@ Combine the observation equation \ref{eq:GPS} and the process equation \ref{eq:G
 \end{frame}
 
 \begin{frame}{Predicting GIA}
-\begin{block}{Predicted mean and uncertainty of GIA}
-Pointwise Bayesian update of the GIA process on a fine grid. For grid point $X_i$, the predictive distribution is
+\framesubtitle{The predictive distribution of the latent process}
+\begin{block}{Predictive Distribution of GIA}
+The prediction is based on the posterior marginal distribution of the latent process 
 \begin{align}
-\bm{\pi}(X_i | \bm{\tilde{Z}}) = \int_{\bm{\mathcal{X}_{-i}}} \bm{\pi}(\bm{X} | \bm{\tilde{Z}}) \ud \bm{X_{-i}}
+\bm{\pi}(\bm{X} | \bm{\tilde{Z}})= \int_{\bm{\Theta}} \bm{\pi}(\bm{X}, \bm{\theta}| \bm{\tilde{Z}})\ud \bm{\theta}
 \end{align}
-\begin{description}
-\item[predicted mean] $X_i^* = \mathbb{E}(X_i| \bm{\tilde{Z}})$
-\item[predicted uncertainty] $u_i^* = \mbox{s.d.}(X_i| \bm{\tilde{Z}})$
-\end{description}
+
+\textcolor{red}{-- Integrating the uncertainty of the parameters.}
+\end{block}
+
+Other choices include the ``plug-in'' predictive distribution $\bm{\pi}_{p}(\bm{X} | \bm{\tilde{Z}}) = \bm{\pi}_{p}(\bm{X} | \bm{\tilde{Z}}, \bm{\hat{\theta}})$, where $\bm{\hat{\theta}}$ are the estimated values of the parameters, e.g. posterior mean or mode.
+\end{frame}
+
+\begin{frame}{Predicting GIA}
+\framesubtitle{Point-wise prediction of the latent process}
+\begin{block}{Point-wise predicted mean and uncertainty}
+For point-wise update at $X_i$ on a fine grid, we use 
+\begin{align*}
+&\mbox{predicted mean:} X_i^* = \mathbb{E}(X_i| \bm{\tilde{Z}}) \\
+&\mbox{predicted uncertainty:} u_i^* = \mbox{s.d.}(X_i| \bm{\tilde{Z}})
+\end{align*}
+where $\bm{\pi}(X_i | \bm{\tilde{Z}}) = \int_{\bm{\mathcal{X}_{-i}}} \bm{\pi}(\bm{X} | \bm{\tilde{Z}}) \ud \bm{X_{-i}}$.
 
 \end{block}
+When using the ``plug-in'' predictive distribution, $\bm{\pi}_{p}(X_i | \bm{\tilde{Z}})$ is Gaussian and the Bayesian update can be written in closed form.
 \end{frame}
+
+
+
 
 %----------- Section --------------------------------------------------%
 \section{The SPDE Approach}
 \begin{frame}{The GMRF approximation}
 \begin{itemize}
 \item Bayesian update of the GP on a grid of $m$ points scales as $\mathcal{O}(m^3)$, $m \sim 10^5$ for a $1^\circ $ global grid.
-\item Gaussian Markov random filed (GMRF) with sparse precision matrix  has much better scaling property.
+\item Gaussian Markov random field (GMRF) with sparse precision matrix has a much better scaling property.
 \end{itemize}
 
 \begin{block}{The SPDE approach \citep{Lindgren2011}} 
 
-Denote by $\bm{\tilde{X}}$ the GMRF approximation of $\bm{X}$ on a given triangulation with basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then  $s \in \mathbb{S}^2$
+Denote by $\bm{\mathrm{x}}$ the GMRF approximation of $\bm{X}$ on a triangulation of $m$ vertices with basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then  $s \in \mathbb{S}^2$
 \begin{align}
-\bm{X}(s) \approx \bm{\phi}_i(s)^T\bm{\tilde{X}}
+\bm{X}(s) \approx \bm{\phi}_i(s)^T\bm{\mathrm{x}}
 \end{align}
-For a grid $\bm{S} \subset \mathbb{S}$ of locations, we find the weight matrix $\bm{C}$ and write $\bm{X}(\bm{S}) \approx \bm{C}\bm{\tilde{X}}$.
+For a grid $\bm{S} \subset \mathbb{S}$ of locations, we find the weight matrix $\bm{C}$ and write $\bm{X}(\bm{S}) \approx \bm{C}\bm{\mathrm{x}}$.
 \end{block}
 \end{frame}
 
 \begin{frame}{The GMRF approximation}
-Now the BHM \ref{eq:BHM} becomes
+Now the BHM in equation \eqref{eq:BHM} becomes
 \begin{align}\label{eq:BHM_gmrf}
 \left\{ \begin{array}{l}
-\bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{C}\bm{\tilde{X}} + \bm{\varepsilon}, \; 
+\bm{\tilde{Z}} = \bm{\mathcal{A}}\bm{C}\bm{\mathrm{x}} + \bm{\varepsilon}, \; 
 \bm{\varepsilon} \sim \mathcal{N} (\bm{0}, \mbox{diag}(e_1^2, e_2^2, \dots, e_N^2)) \\
-\bm{\tilde{X}} \sim \mathcal{N}(\bm{0}, \bm{Q}^{-1}(\rho, \sigma^2)) \\
-\rho \sim \bm{\pi}(\rho), \;\;\; \sigma^2 \sim \bm{\pi}(\sigma^2)
+\bm{\mathrm{x}} \sim \mathcal{N}(\bm{0}, \bm{Q}^{-1}(\bm{\theta})) \\
+\bm{\theta} \sim \bm{\pi}(\bm{\theta})
 \end{array} \right.
 \end{align}
-where $\bm{\tilde{X}} $ is defined by the precision matrix $\bm{Q}$
+$\bm{\mathrm{x}} $ is GMRF approximation defined by the precision matrix $\bm{Q}$.
 
 \end{frame}
 
 %----------- slide --------------------------------------------------%
-\begin{frame}{Choosing the mesh on sphere}
-\includegraphics[width=0.5\textwidth]{images/GIA_mesh1}
-\includegraphics[width=0.5\textwidth]{images/GIA_mesh2}
+\begin{frame}{Choosing the mesh on a sphere}
+\vspace{0.7cm}
+\begin{minipage}[c]{0.4\textwidth}
+\centering
+\footnotesize{semi-regular mesh}
 
+\includegraphics[width=0.7\textwidth]{images/GIA_mesh1}
+\vspace{0.5cm}
+
+\footnotesize{irregular mesh}
+
+\includegraphics[width=0.6\textwidth]{images/GIA_mesh2}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.6\textwidth}
+\centering
+\includegraphics[width=0.8\textwidth]{images/mesh_pars}
+
+\footnotesize{Parameter estimation using different meshes.}
+\end{minipage}%
+
+\end{frame}
+
+%----------- Section --------------------------------------------------%
+\begin{frame}{Mesh effect}
+\framesubtitle{The predicted uncertainties using regular mesh}
+
+\vspace{0.7cm}
+\centering
+\includegraphics[width = 0.9\textwidth]{images/reg_var}
+\end{frame}
+
+%----------- Section --------------------------------------------------%
+\begin{frame}{Mesh effect }
+\framesubtitle{The predicted uncertainties using irregular mesh}
+
+\vspace{0.7cm}
+\centering
+\includegraphics[width = 0.9\textwidth]{images/irreg_var}
 \end{frame}
 
 %----------- Section --------------------------------------------------%
 \section{First result for GIA}
 \begin{frame}{First solution for GIA}
-\centering
-\includegraphics[width = \textwidth]{images/GIA_map}
+\vspace{0.2cm}
+\begin{center}
+\includegraphics[width = 0.95\textwidth]{images/GIA_map}
+\end{center}
+\footnotesize{Predicted GIA mean field overlaid with uncertainty discs on a sparse grid and at the GPS locations. The disc size is proportional to the predicted uncertainty.}
 \end{frame}
 
 %----------- Section --------------------------------------------------%
@@ -389,13 +445,13 @@ where $\bm{\tilde{X}} $ is defined by the precision matrix $\bm{Q}$
 \begin{frame}{Conclusion}
 
 \begin{itemize}
-\item Test the statistical framework on the GIA.
-\item Find a better mesh.
+\item Tested the statistical framework on the GIA.
+\item Need a better mesh.
 \begin{itemize}
 \item Adaptive -- fast computation
-\item regularity -- stable approximation
+\item Regularity -- stable approximation
 \end{itemize}
-\item Need better quality GPS data.
+\item Improve GPS data quality.
 \item Extend to the full system.
 \end{itemize}
 

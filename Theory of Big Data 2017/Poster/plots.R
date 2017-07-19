@@ -16,6 +16,7 @@ base_world
 
 ## Load the GPS data
 GPS_obs <- read.table("experimentBHM/GPS_combined_20170530_final.txt", header = T)
+GPS_obs$lon <- ifelse(GPS_obs$lon < 0, GPS_obs$lon + 360, GPS_obs$lon)
 std_size <- sqrt(sqrt(GPS_obs$std))
 
 map_data <- base_world +
@@ -109,40 +110,43 @@ for (i in 1:length(polys3D)){
 
 ##### Plot prelim results of GIA
 ## load data results
-load("glbm_doc/Theory of Big Data 2017/Poster/1blMesh_inla.RData")
+load("experimentBHM//1blMesh_inla.RData")
+## GIA
+GIA_ice6g2 <- read.table(file = "experimentBHM/inla_GIApred.txt", header = TRUE)
+GPS_obs$spost <- res_inla$summary.linear.predictor$sd[481:960]
 
 map_GIA <- ggplot(data=GIA_ice6g2) + geom_raster(aes(x = x_center, y = y_center, fill = GIA_mpost)) + 
   coord_fixed() + xlab("Longitude") + ylab("Latitude") + 
   scale_x_continuous(limits=c(0,360),  expand = c(0, 0)) + scale_y_continuous(limits=c(-90,90),  expand = c(0, 0)) + 
-  scale_fill_gradient2(low = "dark blue", mid = "white", high = "red", midpoint = 0, name = "", limit = c(-15, 15),
-                        guide = guide_colorbar(barwidth = 2, barheight = 10, label.position = "right")) 
+  scale_fill_gradient2(low = "deepskyblue", mid = "white", high = "orange red", midpoint = 0, name = "mm/yr", limit = c(-15, 15),
+                        guide = guide_colorbar(barwidth = 2, barheight = 10, label.position = "right", title.position = "bottom")) 
 
 map_GIA2 <- map_GIA + geom_polygon(data=world_map, aes(x=long, y=lat, group=group), 
                                    colour="yellowgreen", fill = NA, alpha = 0.3)
 
 
-map_GIA3 <- map_GIA2 + geom_point(data=GPS_obs, aes(x=lon, y=lat), pch=19, 
-                                   col = "black") 
+map_GIA3 <- map_GIA2 + geom_point(data=GPS_obs, aes(x=lon, y=lat), pch=19, size = GPS_obs$spost*3,
+                                    col = "black", fill = "black", alpha=0.5) 
 
 GIA_std <- GIA_ice6g2[,c("x_center", "y_center", "GIA_spost")]
-GIA_std <- subset(GIA_std, x_center %in% seq(-170, 170, 15))
+GIA_std <- subset(GIA_std, x_center %in% seq(5, 360, 15))
 GIA_std <- subset(GIA_std, y_center %in% seq(-82.5, 82.5, 12))
 
 map_GIA4 <- map_GIA3 + geom_point(data=GIA_std, aes(x=x_center, y=y_center), pch=19, size = GIA_std$GIA_spost*3,
-                                  col = "grey", fill = "grey", alpha=0.3)
+                                  col = "grey", fill = "grey", alpha=0.5)
 beauty <- 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
         panel.background = element_rect(fill = "white", colour = 'white'), 
-        legend.text = element_text(size = 30),
-        legend.title = element_text(size = 30), 
-        axis.text = element_text(size = 30),
-        axis.title = element_text(size = 30),
+        legend.text = element_text(size = 20),
+        legend.title = element_text(size = 20), 
+        axis.text = element_text(size = 25),
+        axis.title = element_text(size = 25),
         axis.line = element_line(size = 1),
         plot.title = element_text(hjust = 0.5, size = 30),
         panel.border = element_blank())
        
 
-map_GIAf <- map_GIA4 + beauty + ggtitle("GIA (mm/year)") 
+map_GIAf <- map_GIA4 + beauty + ggtitle("GIA (vertical bedrock movement)") 
 
 png("GIAdif_map.png", width = 1200, height = 600, pointsize = 20)
 print(map_GIAf)
