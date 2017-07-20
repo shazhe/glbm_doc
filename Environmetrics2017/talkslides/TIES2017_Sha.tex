@@ -194,6 +194,7 @@
 \end{frame}
 
 \begin{frame}{The Bayesian hierarchical model}
+\framesubtitle{Framework concept \citep{AZM2015}}
 \vspace{0.5cm}
 \centering
 \includegraphics[height =0.7\textheight]{images/GMconcept-simplified}
@@ -229,15 +230,18 @@
 %----------- slide --------------------------------------------------%
 \begin{frame}{The GIA process}
 
-\vspace{0.3cm}
-\begin{minipage}[c]{0.45\textwidth}
-Denote the true GIA process by 
-$\bm{Y}: \mathbb{S}^2 \mapsto \mathbb{R},$
-and the prior mean trend by
-$\bm{\mu}: \mathbb{S}^2 \mapsto \mathbb{R}$.
+\vspace{0.5cm}
+\begin{minipage}[c]{0.4\textwidth}
+\textcolor{blue}{true GIA process} 
+
+$\bm{Y}: \mathbb{S}^2 \mapsto \mathbb{R}$
+
+\vspace{0.5cm}
+\textcolor{blue}{prior mean trend}
+
+$\bm{\mu}: \mathbb{S}^2 \mapsto \mathbb{R}$
 \end{minipage}%
-\hfill
-\begin{minipage}[c]{0.5\textwidth}
+\begin{minipage}[c]{0.55\textwidth}
 \centering
 \includegraphics[width = \textwidth, clip]{images/ice6g}
 
@@ -257,7 +261,12 @@ $\kappa(\bm{\theta})$ -- Mat{\'e}rn covariance function with parameter $\bm{\the
 \begin{frame}{The GPS observations}
 \framesubtitle{Vertical movement in the Earth's surface}
 \vspace{0.3cm}
-At a selected GPS station $i$, the time series are processed into an uplift rate $Z_i$ (mm/yr) and a measurement error  $\varepsilon_i \sim \mathcal{N}(0, e_i^2)$, where $e_i$ is taken to be the standard error of the time series estimate.
+GPS times series signals at Station $i$,
+\begin{itemize}
+\item[-] an uplift rate $Z_i$ (mm/yr)
+\item[-] a measurement error  $\varepsilon_i \sim \mathcal{N}(0, e_i^2)$
+\item[-] $e_i = \mbox{s.d.}(Z_i)$ estimated from the time series.
+\end{itemize} 
 
 \begin{minipage}[c]{0.4\textwidth}
 \centering
@@ -287,7 +296,7 @@ At a selected GPS station $i$, the time series are processed into an uplift rate
 \end{minipage}%
 \hfill
 \begin{minipage}[c]{0.5\textwidth}
-Define $\bm{\mathcal{A}_i}$ as the map from the latent process over the appropriate spatial \emph{\textbf{foot print}} to the $i^{th}$ observation,
+$\bm{\mathcal{A}_i}$ maps the latent process over the appropriate spatial \emph{\textbf{foot print}} to the $i^{th}$ observation,
 \begin{align}\label{eq:GPSi}
 Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, 
 \end{align} 
@@ -422,7 +431,7 @@ $\bm{\mathrm{x}} $ is GMRF approximation defined by the precision matrix $\bm{Q}
 \end{frame}
 
 %----------- Section --------------------------------------------------%
-\begin{frame}{Mesh effect }
+\begin{frame}{Mesh effect}
 \framesubtitle{The predicted uncertainties using irregular mesh}
 
 \vspace{0.7cm}
@@ -433,26 +442,26 @@ $\bm{\mathrm{x}} $ is GMRF approximation defined by the precision matrix $\bm{Q}
 %----------- Section --------------------------------------------------%
 \section{First result for GIA}
 \begin{frame}{First solution for GIA}
-\vspace{0.2cm}
-\begin{center}
-\includegraphics[width = 0.95\textwidth]{images/GIA_map}
-\end{center}
-\footnotesize{Predicted GIA mean field overlaid with uncertainty discs on a sparse grid and at the GPS locations. The disc size is proportional to the predicted uncertainty.}
+\vspace{0.5cm}
+\includegraphics[width = 1.05\textwidth]{images/GIA_map}
+
+\centering
+\footnotesize{GIA disc size (grey) proportional to predicted uncertainty}
 \end{frame}
 
 %----------- Section --------------------------------------------------%
 \section{Conclusion}
-\begin{frame}{Conclusion}
+\begin{frame}{Conclusions and outlook}
 
 \begin{itemize}
-\item Tested the statistical framework on the GIA.
-\item Need a better mesh.
+\item Testing the statistical framework for the GIA.
+\item Requiring improved mesh.
 \begin{itemize}
 \item Adaptive -- fast computation
-\item Regularity -- stable approximation
+\item Regular -- stable approximation
 \end{itemize}
-\item Improve GPS data quality.
-\item Extend to the full system.
+\item Improving GPS data quality.
+\item Extending to the full system.
 \end{itemize}
 
 
