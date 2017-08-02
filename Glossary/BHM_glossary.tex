@@ -116,7 +116,9 @@
 
 
 \section{Forward modelling and spatial support}
+Each of the latent processes are linked to various data sets of observations according to their contributions. These links are usually linear translators that averaging the process values at the different spatial scales of the observed data, with measurement errors. This is often called \emph{the change of support problem (COSP)} in the literature on spatial statistics. For our framework, we define the term \emph{spatial foot print} to describe the spatial unit of a process corresponding to an observation for a given resolution level. 
 
+For the GIA process to the GPS data, we can assume the foot print of a GPS data point to be a single point of the GIA process at the same location. We can also have the foot print of the GPS data to be the disk centred at the location of the GPS observation with certain radius, and the values of the GPS data are weighted average of the GIA process within that disk.
 
 
 \section{The Bayesian hierarchical model}
