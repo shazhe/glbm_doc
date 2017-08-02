@@ -120,7 +120,7 @@
 \color{GMred}
 \title[BHM for GIA and global sea level rise]{Bayesian estimation of global glacial isostatic adjustment for sea level rise re-evaluation} % short title for footer
 \author%
-[Z. Sha et. al]{Zhe Sha\textsuperscript{1},  Maike Schumancher\textsuperscript{1},  \\ 
+[Z. Sha et. al]{Zhe Sha\textsuperscript{1},  Maike Schumacher\textsuperscript{1},  \\ 
  Jonathan Rougier\textsuperscript{2} and Jonathan Bamber\textsuperscript{1}
 }
 \institute%
@@ -375,11 +375,11 @@ When using the ``plug-in'' predictive distribution, $\bm{\pi}_{p}(X_i | \bm{\til
 
 \begin{block}{The SPDE approach \citep{Lindgren2011}} 
 
-Denote by $\bm{\mathrm{x}}$ the GMRF approximation of $\bm{X}$ on a triangulation of $m$ vertices with basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then  $s \in \mathbb{S}^2$
+Denote by $\bm{\mathrm{x}}$ the GMRF approximation of $\bm{X}$ on a triangulation of $m$ vertices with basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then for $s \in \mathbb{S}^2$
 \begin{align}
 \bm{X}(s) \approx \bm{\phi}_i(s)^T\bm{\mathrm{x}}
 \end{align}
-For a grid $\bm{S} \subset \mathbb{S}$ of locations, we find the weight matrix $\bm{C}$ and write $\bm{X}(\bm{S}) \approx \bm{C}\bm{\mathrm{x}}$.
+For a grid $\bm{S} \subset \mathbb{S}$ of locations, we find the basis matrix $\bm{C}$ and write $\bm{X}(\bm{S}) \approx \bm{C}\bm{\mathrm{x}}$.
 \end{block}
 \end{frame}
 
@@ -458,7 +458,7 @@ $\bm{\mathrm{x}} $ is GMRF approximation defined by the precision matrix $\bm{Q}
 \item Requiring improved mesh.
 \begin{itemize}
 \item Adaptive -- fast computation
-\item Regular -- stable approximation
+\item Regular -- reliable approximation
 \end{itemize}
 \item Improving GPS data quality.
 \item Extending to the full system.
