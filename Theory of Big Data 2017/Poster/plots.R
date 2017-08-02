@@ -146,7 +146,7 @@ beauty <-
         panel.border = element_blank())
        
 
-map_GIAf <- map_GIA4 + beauty + ggtitle("GIA (vertical bedrock movement)") 
+map_GIAf <- map_GIA4 + beauty + ggtitle("predicted GIA mean field (vertical bedrock movement)") 
 
 png("GIAdif_map.png", width = 1200, height = 600, pointsize = 20)
 print(map_GIAf)
