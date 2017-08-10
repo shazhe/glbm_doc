@@ -36,13 +36,12 @@
 \newglossaryentry{fwmodelling}
 {
         name=forward modelling,
-        description={physical model, usually a (partial) differential equation system, used to
-                     solve certain geophysical process}
+        description={The approach that link the process contribution to the corresponding observation.}
 }
 \newglossaryentry{footprint}
 {
-        name=footprint,
-        description={aa}
+        name=foot print,
+        description={The spatial unit where the geophysical process makes a contribution to the observed data.}
 }
 
 \newglossaryentry{hyperpars}
@@ -56,6 +55,12 @@
 {
         name=lengthscale,
         description={define and usually denoted by $\rho$}
+}
+
+\newglossaryentry{mesh}
+{
+        name=mesh,
+        description={A triangulation of a given area.}
 }
  
 \newglossaryentry{normvar}
@@ -96,6 +101,7 @@
 }
 
 \newacronym{bhm}{BHM}{Bayesian hierarchical model} 
+\newacronym{cosp}{COSP}{change of support problem} 
 \newacronym{gia}{GIA}{glacial isostatic adjustment}
 \newacronym{gp}{GP}{Gaussian process}
 \newacronym{gmrf}{GMRF}{Gaussian Markov random field}
@@ -104,21 +110,14 @@
 \newacronym{inla}{INLA}{integrated nested Laplace approximation}
 \newacronym{mcmc}{MCMC}{Markov chain Monte Carlo}
 \newacronym{pdf}{pdf}{probability density function}
- 
+
 \begin{document}
- \title{The Bayesian Hierarchical model and glossary}
-\author{Zhe Sha}
+ \title{GlobalMass project glossary}
+\author{The GlobalMass Team\footnote{Z. Sha contributes to most part of the Bayesian Hierarchical model.}}
 \maketitle
 
 \onehalfspacing
 \numberwithin{equation}{section}
-
-
-
-\section{Forward modelling and spatial support}
-Each of the latent processes are linked to various data sets of observations according to their contributions. These links are usually linear translators that averaging the process values at the different spatial scales of the observed data, with measurement errors. This is often called \emph{the change of support problem (COSP)} in the literature on spatial statistics. For our framework, we define the term \emph{spatial foot print} to describe the spatial unit of a process corresponding to an observation for a given resolution level. 
-
-For the GIA process to the GPS data, we can assume the foot print of a GPS data point to be a single point of the GIA process at the same location. We can also have the foot print of the GPS data to be the disk centred at the location of the GPS observation with certain radius, and the values of the GPS data are weighted average of the GIA process within that disk.
 
 
 \section{The Bayesian hierarchical model}
@@ -130,23 +129,36 @@ We assume that the true \acrshort{gia} process is a real-valued spatial process 
 \end{align}
 where $\kappa(\bm{\theta})$ defines the covariance function with \gls{hyperpars} $\bm{\theta}$.
 
-In order to assess the bias and uncertainties in the \emph{ice6g} solutions, we use the GPS observations to update the \acrshort{gia} process. The GPS  data are the yearly trends of vertical movements in millimetre at the observed locations. These observations can be regarded as a linear map of the \acrshort{gia} process with measurement errors
+In order to assess the bias and uncertainties in the \emph{ice6g} solutions, we use the GPS observations to update the \acrshort{gia} process. The GPS  data are the yearly trends of vertical movements in millimetre at the observed locations. These observations can be regarded as a linear map of the \acrshort{gia} process with measurement errors.
+
+\subsection{From geophysical processes to observations}
+With the geophysical processes defined and data processed, we need to link the processes to various observations according to their contributions. These links are usually linear translators that average the process values at the different spatial scales of the data. This is often called \emph{\acrfull{cosp}} in the literature of spatial statistics. 
+
+In our framework, we define the term spatial \emph{\gls{footprint}} $\Omega_i$ of an observation $O_i$ as the spatial unit where the geophysical process has a contribution to the observed value. Define $\bm{\mathcal{A}_i}$ to be a linear operator that maps from the process value over $\Omega_i$ to the observation value $O_i$ over its own spatial unit $\delta_i$. Then $\bm{\mathcal{A}_i}$ can usually be a map from point to point, area to point or area to area. Figure \ref{fig:footprint} shows the footprint of the GPS and GIA data.
+\begin{figure}[hbtp]
+\centering
+\includegraphics[width= 0.7\textwidth]{footprint}
+\caption{Examples of foot prints of GPS and GRACE data on the GIA process.}\label{fig:footprint}
+\end{figure}
+
+
+For example, the GPS signal can be affected by GIA process over a large area with decaying weights along distance to the GPS location. In this first test of framework, we simple assume the foot print of a GPS data point to be a single point of the GIA process at the same location. Thus, $\mathcal{A}_i$ is a point to point map and we have the following observation equation
 \begin{align}\label{eq:GPSi}
 Z_i = \bm{\mathcal{A}}_i\bm{Y} + \varepsilon_i, \; i = 1,\dots N.
 \end{align} 
-where $\bm{\mathcal{A}}_i$ is the linear operator that maps the \acrshort{gia} process to the $i^{\mbox{th}}$ GPS observation and $\varepsilon_i$ are assumed to be independent Gaussian errors $\mathcal{N}(0, e_i^2)$. In practice, $e_i^2$ can usually be estimated from raw GPS data and therefore we set them to be fixed values from \gls{priorinfo}. 
+where $Z_i$ measures the uplift rate of the bedrock at the $i^{th}$ GPS station and the measurement errors $\varepsilon_i$s are assumed to be independent Gaussian errors $\mathcal{N}(0, e_i^2)$. In practice, $Z_i$ is estimated from the raw GPS time series signals and $e_i$ is fixed to be the standard error $Z_i$. 
 
-Denote the linear operator for the GPS observation vector $\bm{Z}$ by 
+Then by stacking $\bm{\mathcal{A}_i}$ together as 
 \begin{align*}
 \bm{\mathcal{A}} = \left[\begin{array}{c}
- \bm{\mathcal{A}}_1\\ \vdots \\ \bm{\mathcal{A}}_N \end{array} \right]
+ \bm{\mathcal{A}}_1\\ \vdots \\ \bm{\mathcal{A}}_N \end{array} \right],
 \end{align*}
-Then we can write equation \ref{eq:GPSi} into the vector form
+we can write equation \eqref{eq:GPSi} into vector form
 \begin{align}\label{eq:GPS}
 \bm{Z} = \bm{\mathcal{A}}\bm{Y} + \bm{\varepsilon} 
 \end{align}
 
-Now combining equations \ref{eq:GIAresid} and \ref{eq:GPS}, the system simplifies to
+Now combining equations \eqref{eq:GIAresid} and \eqref{eq:GPS}, the system simplifies to
 \begin{align}
 \bm{\tilde{Z}} = \bm{Z} - \bm{\mathcal{A}}\bm{\mu}= \bm{\mathcal{A}}\bm{X} + \bm{\varepsilon}
 \end{align}
@@ -161,14 +173,16 @@ Hence, our final model is
 \end{align}
 where $\bm{\pi}(\bm{\theta})$ is the \gls{prior} for the \gls{hyperpars}.
 
-\section{GMRF Approximation}
+We call the above approach of linking the process to the observation \emph{\gls{fwmodelling}}. To be differentiated from \gls{fwmodel}, the \gls{fwmodelling} approach describes the functional relationship between the process and the data rather than the underlying physical mechanism of the latent process.
+
+\subsection{GMRF Approximation}
 Suppose we would like to predict the \acrshort{gia} process on a set of grid points $\bm{S} = \{s_i: i = 1,\dots, m\}$ with a given resolution. The Gaussian process model can be computationally expensive for large scale inference since the Bayesian update scales as $\mathcal{O}(m^3)$ mainly due to the inverse of a dense covariance matrix. 
 
 At the same time, \acrlong{gmrf} is often used for modelling discrete spatial unit. The covariance structure is defined through its inverse, the precision matrix, which is usually sparse and thus has nice computational properties.
 
 The Gaussian process with Mat\'{e}rn covariance function can be treated as solutions to a class of \acrlong{spde}s \citep{Lindgren2011} which can then be approximated by \acrshort{gmrf} using finite element methods. 
 
-Denote by $\bm{\tilde{X}}$ the \acrshort{gmrf} approximation of $\bm{X}$ on a given triangulation of the sphere with piecewise linear basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then given any location $s \in \mathbb{S}^2$
+Denote by $\bm{\tilde{X}}$ the \acrshort{gmrf} approximation of $\bm{X}$ on a given triangulation of the sphere with piecewise linear local basis functions $\{ \bm{\phi}_i \}_{i \in \mathbb{N}}$, then given any location $s \in \mathbb{S}^2$
 \begin{align}
 \bm{X}(s) \approx \bm{\phi}_i(s)^T\bm{\tilde{X}}
 \end{align}
@@ -189,7 +203,9 @@ Now with the GMRF approximation, our model becomes
 \end{align}
 where $\bm{Q}$ is the precision matrix of the \acrshort{gmrf} approximation.
 
-\section{Bayesian Inference and prediction}
+The \acrshort{gmrf} approximation requires generating a \gls{mesh} which is often a triangulation of a given area of interest. Then $\bm{\tilde{X}}$ are located at the vertices of the mesh. For a mesh that is approximately regular, we define the resolution of the mesh to be the average area of the triangles converted to degree by degree; and for irregular mesh, the resolution is calculated by using the smallest triangle.
+
+\subsection{Bayesian Inference and prediction}
 The Bayesian inference requires finding the posterior distributions of the hyper parameters and the latent process. The \acrfull{mcmc} can be used in general to sample from the posteriors and the \acrfull{inla} is a fast approximation method. In the following, we use $\bm{\pi}$ for a general \acrshort{pdf} and define a few terms used in our Bayesian inference.
 
 The Bayesian inference draw conclusions from the posterior distribution 
